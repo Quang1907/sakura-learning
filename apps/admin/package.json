@@ -6,10 +6,10 @@
   "description": "Admin and Content Moderation Portal for Sakura Swipe Learning",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "echo \"Admin dev mode placeholder\"",
-    "build": "echo \"Admin build placeholder\"",
-    "test": "echo \"Admin test placeholder\"",
-    "lint": "echo \"Admin lint placeholder\""
+    "dev": "tsc --build --watch",
+    "build": "tsc --build",
+    "test": "vitest run",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@sakura/shared": "*",

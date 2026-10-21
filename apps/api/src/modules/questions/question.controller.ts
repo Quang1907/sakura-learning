@@ -36,7 +36,18 @@ export class QuestionController {
         return;
       }
 
-      const userId = req.user?.userId ?? 2; // Default to authenticated user ID
+      if (!req.user) {
+        res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Yêu cầu đăng nhập trước khi nộp câu trả lời.',
+          },
+        });
+        return;
+      }
+
+      const userId = req.user.userId;
       const result = await this.service.submitAnswer(
         questionId,
         parseResult.data,

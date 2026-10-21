@@ -25,8 +25,14 @@ interface StoredProgress {
 
 const IN_MEMORY_EVENTS = new Map<string, ProgressEventResponseDto>();
 const IN_MEMORY_PROGRESS = new Map<string, StoredProgress>();
-let inMemoryUserExp = 120;
-let inMemoryStreak = 3;
+const IN_MEMORY_USER_EXP = new Map<number, number>([
+  [1, 1000],
+  [2, 120],
+]);
+const IN_MEMORY_USER_STREAK = new Map<number, number>([
+  [1, 15],
+  [2, 3],
+]);
 
 export class ProgressRepository {
   /**
@@ -47,14 +53,14 @@ export class ProgressRepository {
       );
 
       if (rows && rows.length > 0) {
-        // Return existing cached result
+        const uId = rows[0].user_id;
         return {
           recorded: true,
           nextReviewAt: null,
           srsStage: 1,
           expEarned: 0,
-          newTotalExp: inMemoryUserExp,
-          currentStreakDays: inMemoryStreak,
+          newTotalExp: IN_MEMORY_USER_EXP.get(uId) ?? 0,
+          currentStreakDays: IN_MEMORY_USER_STREAK.get(uId) ?? 0,
         };
       }
     } catch {
@@ -164,16 +170,23 @@ export class ProgressRepository {
       existingProg.views += 1;
       IN_MEMORY_PROGRESS.set(progressKey, existingProg);
 
-      inMemoryUserExp += srsResult.expEarned;
+      const currentExp = IN_MEMORY_USER_EXP.get(userId) ?? 0;
+      IN_MEMORY_USER_EXP.set(userId, currentExp + srsResult.expEarned);
+      if (!IN_MEMORY_USER_STREAK.has(userId)) {
+        IN_MEMORY_USER_STREAK.set(userId, 1);
+      }
     }
+
+    const currentExp = IN_MEMORY_USER_EXP.get(userId) ?? 0;
+    const currentStreak = IN_MEMORY_USER_STREAK.get(userId) ?? 0;
 
     const response: ProgressEventResponseDto = {
       recorded: true,
       nextReviewAt: srsResult.nextReviewAt.toISOString(),
       srsStage: srsResult.newStage,
       expEarned: srsResult.expEarned,
-      newTotalExp: inMemoryUserExp,
-      currentStreakDays: inMemoryStreak,
+      newTotalExp: currentExp,
+      currentStreakDays: currentStreak,
     };
 
     IN_MEMORY_EVENTS.set(clientEventId, response);

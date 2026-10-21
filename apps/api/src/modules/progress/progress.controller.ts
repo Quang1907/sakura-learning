@@ -29,7 +29,18 @@ export class ProgressController {
         return;
       }
 
-      const userId = req.user?.userId ?? 2;
+      if (!req.user) {
+        res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Yêu cầu đăng nhập trước khi thực hiện thao tác.',
+          },
+        });
+        return;
+      }
+
+      const userId = req.user.userId;
       const result = await this.service.recordEvent(userId, parseResult.data);
 
       res.status(200).json({
@@ -47,7 +58,18 @@ export class ProgressController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const userId = req.user?.userId ?? 2;
+      if (!req.user) {
+        res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Yêu cầu đăng nhập trước khi thực hiện thao tác.',
+          },
+        });
+        return;
+      }
+
+      const userId = req.user.userId;
       const stats = await this.service.getStats(userId);
 
       res.status(200).json({
@@ -65,6 +87,17 @@ export class ProgressController {
     next: NextFunction,
   ): Promise<void> => {
     try {
+      if (!req.user) {
+        res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Yêu cầu đăng nhập trước khi thực hiện thao tác.',
+          },
+        });
+        return;
+      }
+
       const events = req.body?.events;
       if (!Array.isArray(events) || events.length === 0) {
         res.status(400).json({
@@ -94,7 +127,7 @@ export class ProgressController {
         validatedEvents.push(parsed.data);
       }
 
-      const userId = req.user?.userId ?? 2;
+      const userId = req.user.userId;
       const batchResult = await this.service.recordBatchEvents(userId, validatedEvents);
 
       res.status(200).json({

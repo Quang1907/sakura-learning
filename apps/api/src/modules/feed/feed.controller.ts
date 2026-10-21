@@ -24,7 +24,18 @@ export class FeedController {
         return;
       }
 
-      const userId = req.user?.userId ?? 2;
+      if (!req.user) {
+        res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Yêu cầu đăng nhập trước khi tải bảng tin học tập.',
+          },
+        });
+        return;
+      }
+
+      const userId = req.user.userId;
       const feed = await this.service.getFeed(userId, parseResult.data);
 
       res.status(200).json({
