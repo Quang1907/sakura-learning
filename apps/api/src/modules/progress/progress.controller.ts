@@ -58,6 +58,53 @@ export class ProgressController {
       next(err);
     }
   };
+
+  public recordBatch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const events = req.body?.events;
+      if (!Array.isArray(events) || events.length === 0) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Events array must be provided and not empty',
+          },
+        });
+        return;
+      }
+
+      const validatedEvents = [];
+      for (const item of events) {
+        const parsed = ProgressEventSchema.safeParse(item);
+        if (!parsed.success) {
+          res.status(400).json({
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Invalid progress event item in batch',
+              details: parsed.error.issues,
+            },
+          });
+          return;
+        }
+        validatedEvents.push(parsed.data);
+      }
+
+      const userId = req.user?.userId ?? 2;
+      const batchResult = await this.service.recordBatchEvents(userId, validatedEvents);
+
+      res.status(200).json({
+        success: true,
+        data: batchResult,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 export const progressController = new ProgressController();

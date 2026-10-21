@@ -9,6 +9,7 @@ import { questionRouter } from './modules/questions/question.router.js';
 import { kanjiRouter, kanjiAdminRouter } from './modules/kanji/kanji.router.js';
 import { vocabularyRouter, vocabularyAdminRouter } from './modules/vocabulary/vocabulary.router.js';
 import { grammarRouter, grammarAdminRouter } from './modules/grammar/grammar.router.js';
+import { packageRouter } from './modules/packages/package.router.js';
 import { notFoundHandler } from './middlewares/not-found.middleware.js';
 import { errorHandler } from './middlewares/error-handler.middleware.js';
 
@@ -30,6 +31,7 @@ export function createApp(): Express {
   app.use('/api/v1/health', healthRouter);
   app.use('/api/v1/feed', feedRouter);
   app.use('/api/v1/progress', progressRouter);
+  app.use('/api/v1/packages', packageRouter);
   app.use('/api/v1/questions', questionRouter);
   app.use('/api/v1/kanji', kanjiRouter);
   app.use('/api/v1/admin/kanji', kanjiAdminRouter);

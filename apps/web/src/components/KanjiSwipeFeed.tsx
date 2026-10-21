@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { FeedCardDto, QuestionResultDto, JlptLevel, JLPT_LEVELS } from '@sakura/shared';
+import { FeedCardDto, QuestionResultDto, JlptLevel, JLPT_LEVELS, ItemType } from '@sakura/shared';
 import { apiClient } from '../api/client.js';
 import { VocabularyCard } from './VocabularyCard.js';
 import { GrammarCard } from './GrammarCard.js';
+import { offlineFeedService } from '../services/feed/offline-feed.service.js';
+import { storageService } from '../services/storage/indexeddb.js';
+import { syncService } from '../services/sync/sync.service.js';
 
 interface SwipeFeedProps {
   onExpChange?: (newExp: number) => void;
@@ -26,6 +29,11 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
   const [questionResult, setQuestionResult] = useState<QuestionResultDto | null>(null);
   const [submittingQuestion, setSubmittingQuestion] = useState(false);
 
+  // Offline state
+  const [isOfflineMode, setIsOfflineMode] = useState<boolean>(
+    typeof navigator !== 'undefined' ? !navigator.onLine : false,
+  );
+
   // Touch tracking for gestures
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -36,85 +44,36 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
     async (resetIndex = true) => {
       try {
         setLoading(true);
+
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+          const offFeed = await offlineFeedService.generateOfflineFeed({
+            limit: 10,
+            currentCardIds: [],
+            jlpt: selectedJlpt,
+            contentType: selectedContentType,
+          });
+          setCards(offFeed.items);
+          setIsOfflineMode(true);
+          if (resetIndex) setCurrentIndex(0);
+          return;
+        }
+
         const res = await apiClient.getFeed(10, [], selectedJlpt, selectedContentType);
         setCards(res.items);
+        setIsOfflineMode(false);
         if (resetIndex) {
           setCurrentIndex(0);
         }
       } catch {
-        // Fallback sample cards if server is initializing
-        setCards([
-          {
-            cardId: 'vocab_1',
-            cardType: 'VOCABULARY',
-            content: {
-              id: 1,
-              word: '日本',
-              reading: 'にほん',
-              romaji: 'nihon',
-              partOfSpeech: 'noun',
-              meaningVi: 'Nhật Bản',
-              examples: [
-                {
-                  sentenceJp: '日本の春は桜が綺麗です。',
-                  sentenceVi: 'Mùa xuân Nhật Bản hoa anh đào rất đẹp.',
-                },
-              ],
-            },
-          },
-          {
-            cardId: 'kanji_1',
-            cardType: 'KANJI',
-            content: {
-              id: 1,
-              character: '日',
-              hanViet: 'NHẬT',
-              onyomi: 'ニチ, ジツ',
-              kunyomi: 'ひ, -び, -か',
-              strokeCount: 4,
-              meaningVi: 'Mặt trời, ban ngày, ngày',
-              examples: [
-                {
-                  word: '日本',
-                  reading: 'にほん',
-                  meaningVi: 'Nhật Bản',
-                },
-              ],
-            },
-          },
-          {
-            cardId: 'grammar_1',
-            cardType: 'GRAMMAR',
-            content: {
-              id: 1,
-              title: '〜は〜です',
-              structure: 'N1 は N2 です',
-              meaningVi: 'N1 là N2',
-              usageNotes: 'Mẫu câu khẳng định cơ bản trong tiếng Nhật',
-              sentences: [
-                {
-                  sentenceJp: '私は日本人です。',
-                  sentenceVi: 'Tôi là người Nhật Bản.',
-                },
-              ],
-            },
-          },
-          {
-            cardId: 'question_1',
-            cardType: 'QUESTION',
-            content: {
-              id: 1,
-              questionType: 'MULTIPLE_CHOICE',
-              prompt: 'Chọn cách đọc đúng của chữ Kanji: 日 (trong từ 日本)',
-              options: [
-                { id: 1, content: 'に' },
-                { id: 2, content: 'つき' },
-                { id: 3, content: 'ほん' },
-                { id: 4, content: 'みず' },
-              ],
-            },
-          },
-        ]);
+        // Fallback to offline feed service from IndexedDB
+        const offFeed = await offlineFeedService.generateOfflineFeed({
+          limit: 10,
+          currentCardIds: [],
+          jlpt: selectedJlpt,
+          contentType: selectedContentType,
+        });
+        setCards(offFeed.items);
+        setIsOfflineMode(true);
         if (resetIndex) {
           setCurrentIndex(0);
         }
@@ -159,25 +118,54 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
       return;
     }
 
+    const eventId = crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`;
+    const content = currentCard.content as { id?: number };
+    const itemType = (currentCard.cardType === 'QUESTION' ? 'KANJI' : currentCard.cardType) as ItemType;
+    const itemId = Number(content.id ?? 1);
+
+    setFeedback('Đã thuộc! (+5 EXP)');
+    onExpChange?.(5);
+
     try {
-      setFeedback('Đã thuộc! (+5 EXP)');
-      const content = currentCard.content as { id?: number };
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        throw new Error('Offline');
+      }
       const res = await apiClient.recordProgressEvent({
-        clientEventId: crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`,
-        itemType: (currentCard.cardType === 'QUESTION' ? 'KANJI' : currentCard.cardType) as
-          | 'KANJI'
-          | 'VOCABULARY'
-          | 'GRAMMAR'
-          | 'SENTENCE',
-        itemId: Number(content.id ?? 1),
+        clientEventId: eventId,
+        itemType,
+        itemId,
         action: 'SWIPE_RIGHT_KNOWN',
       });
       if (res.newTotalExp !== undefined) {
         onExpChange?.(res.newTotalExp);
       }
-      setTimeout(handleNext, 500);
     } catch {
-      setTimeout(handleNext, 400);
+      // Store in IndexedDB Outbox and update local progress
+      await storageService.enqueueOutboxEvent({
+        clientEventId: eventId,
+        userId: 2,
+        itemType,
+        itemId,
+        action: 'SWIPE_RIGHT_KNOWN',
+        createdAt: new Date().toISOString(),
+        metadata: { timeSpentMs: 2000, offlineTimestamp: new Date().toISOString() },
+      });
+      await storageService.saveLocalProgress({
+        key: `${itemType}_${itemId}`,
+        itemType,
+        itemId,
+        status: 'LEARNING',
+        srsStage: 1,
+        easeFactor: 2.5,
+        nextReviewAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+        totalViews: 1,
+        totalCorrect: 1,
+        totalIncorrect: 0,
+        lastStudiedAt: new Date().toISOString(),
+      });
+      syncService.refreshPendingCount();
+    } finally {
+      setTimeout(handleNext, 500);
     }
   };
 
@@ -190,33 +178,66 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
       return;
     }
 
+    const eventId = crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`;
+    const content = currentCard.content as { id?: number };
+    const itemType = (currentCard.cardType === 'QUESTION' ? 'KANJI' : currentCard.cardType) as ItemType;
+    const itemId = Number(content.id ?? 1);
+
+    setFeedback('Cần học lại! Đã lên lịch ôn 4h tới.');
+
     try {
-      setFeedback('Cần học lại! Đã lên lịch ôn 4h tới.');
-      const content = currentCard.content as { id?: number };
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        throw new Error('Offline');
+      }
       await apiClient.recordProgressEvent({
-        clientEventId: crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`,
-        itemType: (currentCard.cardType === 'QUESTION' ? 'KANJI' : currentCard.cardType) as
-          | 'KANJI'
-          | 'VOCABULARY'
-          | 'GRAMMAR'
-          | 'SENTENCE',
-        itemId: Number(content.id ?? 1),
+        clientEventId: eventId,
+        itemType,
+        itemId,
         action: 'SWIPE_LEFT_AGAIN',
       });
-      setTimeout(handleNext, 500);
     } catch {
-      setTimeout(handleNext, 400);
+      // Store in IndexedDB Outbox
+      await storageService.enqueueOutboxEvent({
+        clientEventId: eventId,
+        userId: 2,
+        itemType,
+        itemId,
+        action: 'SWIPE_LEFT_AGAIN',
+        createdAt: new Date().toISOString(),
+        metadata: { timeSpentMs: 1500, offlineTimestamp: new Date().toISOString() },
+      });
+      await storageService.saveLocalProgress({
+        key: `${itemType}_${itemId}`,
+        itemType,
+        itemId,
+        status: 'LEARNING',
+        srsStage: 0,
+        easeFactor: 2.4,
+        nextReviewAt: new Date(Date.now() + 4 * 3600 * 1000).toISOString(),
+        totalViews: 1,
+        totalCorrect: 0,
+        totalIncorrect: 1,
+        lastStudiedAt: new Date().toISOString(),
+      });
+      syncService.refreshPendingCount();
+    } finally {
+      setTimeout(handleNext, 500);
     }
   };
 
   const handleSubmitAnswer = async () => {
     if (!currentCard || currentCard.cardType !== 'QUESTION' || selectedOption === null) return;
 
+    const qContent = currentCard.content as { id: number };
+    const eventId = crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`;
+
     try {
       setSubmittingQuestion(true);
-      const qContent = currentCard.content as { id: number };
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        throw new Error('Offline');
+      }
       const result = await apiClient.submitQuestionAnswer(qContent.id, {
-        clientEventId: crypto.randomUUID ? crypto.randomUUID() : `event-${Date.now()}`,
+        clientEventId: eventId,
         selectedOptionId: selectedOption,
         durationMs: 1500,
       });
@@ -230,8 +251,35 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
       } else {
         setFeedback('Chưa chính xác! Thử xem giải thích bên dưới.');
       }
-    } catch (err) {
-      setFeedback((err as Error).message);
+    } catch {
+      // Grade question locally from IndexedDB
+      const offlineResult = await offlineFeedService.gradeQuestionOffline(
+        qContent.id,
+        selectedOption,
+      );
+      setQuestionResult(offlineResult);
+
+      if (offlineResult.isCorrect) {
+        setFeedback('Chính xác (Chấm ngoại tuyến)! (+10 EXP)');
+        onExpChange?.(10);
+      } else {
+        setFeedback('Chưa chính xác! Thử xem giải thích bên dưới.');
+      }
+
+      // Enqueue event in outbox
+      await storageService.enqueueOutboxEvent({
+        clientEventId: eventId,
+        userId: 2,
+        itemType: 'KANJI',
+        itemId: qContent.id,
+        action: offlineResult.isCorrect ? 'SWIPE_RIGHT_KNOWN' : 'SWIPE_LEFT_AGAIN',
+        createdAt: new Date().toISOString(),
+        metadata: {
+          timeSpentMs: 1500,
+          offlineTimestamp: new Date().toISOString(),
+        },
+      });
+      syncService.refreshPendingCount();
     } finally {
       setSubmittingQuestion(false);
     }
@@ -367,6 +415,16 @@ export const KanjiSwipeFeed: React.FC<SwipeFeedProps> = ({ onExpChange, onOpenSt
             </button>
           )}
         </div>
+
+        {/* Offline Mode Banner */}
+        {isOfflineMode && (
+          <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-bold">
+            <span className="flex items-center gap-1.5">
+              <span>📱</span> Chế độ học Ngoại tuyến (Đã lưu máy)
+            </span>
+            <span className="text-[10px] text-amber-600 font-semibold">Tự động đồng bộ</span>
+          </div>
+        )}
 
         {/* Content Type Filter */}
         <div className="grid grid-cols-4 gap-1 p-1 bg-white/70 rounded-xl border border-pink-100/70 text-[11px] font-bold">

@@ -47,6 +47,37 @@ export class LearningProgressService {
   public async getStats(userId: number): Promise<UserStatsDto> {
     return this.repo.getUserStats(userId);
   }
+
+  /**
+   * Record a batch of learning swipe events from offline outbox synchronization.
+   * Guarantees idempotency for each event individually.
+   */
+  public async recordBatchEvents(
+    userId: number,
+    events: ProgressEventDto[],
+  ): Promise<{
+    results: Array<ProgressEventResponseDto & { clientEventId: string }>;
+    totalProcessed: number;
+    totalExpEarned: number;
+  }> {
+    const results: Array<ProgressEventResponseDto & { clientEventId: string }> = [];
+    let totalExpEarned = 0;
+
+    for (const event of events) {
+      const res = await this.recordEvent(userId, event);
+      results.push({
+        ...res,
+        clientEventId: event.clientEventId,
+      });
+      totalExpEarned += res.expEarned;
+    }
+
+    return {
+      results,
+      totalProcessed: results.length,
+      totalExpEarned,
+    };
+  }
 }
 
 export const learningProgressService = new LearningProgressService();

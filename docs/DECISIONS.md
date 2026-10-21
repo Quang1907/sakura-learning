@@ -104,3 +104,26 @@ Tài liệu này ghi lại các quyết định kỹ thuật và kiến trúc qu
 - **Hệ quả**:
   - _Ưu điểm_: Cơ sở dữ liệu chuẩn hóa, tái sử dụng tối đa câu ví dụ, trải nghiệm vuốt thích ứng theo mục tiêu học tập của từng học viên.
   - _Đánh đổi_: Logic lọc và lắp ghép thẻ tại `FeedEngineService` cần phối hợp nhiều nguồn dữ liệu hơn.
+
+---
+
+## ADR-011: Kiến trúc Offline-First, IndexedDB Stores và Cơ chế Outbox Synchronization (Phase 6)
+
+- **Bối cảnh**: Người dùng học tiếng Nhật trên iPhone/Android thường di chuyển trên tàu xe, khu vực sóng yếu hoặc mất mạng. Yêu cầu ứng dụng phải cài đặt được qua Safari Add to Home Screen, mở tức thì không cần mạng, tiếp tục học nội dung đã tải, trả lời câu hỏi và tự động đồng bộ tiến độ khi kết nối mạng trở lại mà không mất dữ liệu hay nhân đôi EXP.
+- **Quyết định**:
+  1. **PWA & Service Worker**:
+     - Pre-cache App Shell tĩnh (`index.html`, `manifest.webmanifest`, `sakura-icon.svg`).
+     - Chiến lược điều hướng: Network-First với fallback App Shell cho navigation.
+     - Bảo vệ dữ liệu nhạy cảm: Tuyệt đối không cache các endpoint `/api/v1/auth/*`.
+  2. **Storage Layer IndexedDB**:
+     - Phân định rõ ràng các Object Store: `packages` (gói bài học), `kanji`, `vocabulary`, `grammar`, `questions` (dữ liệu nội dung), `local_progress` (tiến độ học cục bộ), `outbox_events` (hàng đợi sự kiện chờ đồng bộ).
+     - Cho phép xóa bộ nhớ đệm nội dung (`clearContentCache`) nhưng tuyệt đối bảo tồn `local_progress` và `outbox_events`.
+  3. **Offline Feed & Local Question Grading**:
+     - `OfflineFeedService` lắp ráp thẻ từ IndexedDB theo đúng quy tắc Anti-Repetition và Anti-Fatigue (câu hỏi không bao giờ xuất hiện liên tiếp).
+     - Câu hỏi trắc nghiệm được chấm điểm cục bộ, hiển thị giải thích tức thì và ghi nhận sự kiện học vào `outbox_events` với `clientEventId` (UUID v4).
+  4. **Batch Sync & Idempotency**:
+     - Bổ sung endpoint backend `POST /api/v1/progress/batch` xử lý lô sự kiện nguyên tử.
+     - Client chỉ xóa sự kiện khỏi `outbox_events` sau khi nhận được HTTP 200/201 kèm xác nhận từ server.
+- **Hệ quả**:
+  - _Ưu điểm_: Trải nghiệm học tập liền mạch, không gián đoạn, bảo toàn 100% dữ liệu học viên, tải app như native iOS.
+  - _Đánh đổi_: Cần kiểm soát dung lượng IndexedDB thông qua API `navigator.storage.estimate()` và duy trì song song logic chấm điểm offline và online.

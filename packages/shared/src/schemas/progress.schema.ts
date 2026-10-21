@@ -47,3 +47,23 @@ export const UserStatsSchema = z.object({
 });
 
 export type UserStatsDto = z.infer<typeof UserStatsSchema>;
+
+export const BatchProgressEventItemResultSchema = ProgressEventResponseSchema.extend({
+  clientEventId: z.string(),
+});
+
+export type BatchProgressEventItemResultDto = z.infer<typeof BatchProgressEventItemResultSchema>;
+
+export const BatchProgressEventSchema = z.object({
+  events: z.array(ProgressEventSchema).min(1, 'Events array cannot be empty').max(100, 'Max 100 events per batch'),
+});
+
+export type BatchProgressEventDto = z.infer<typeof BatchProgressEventSchema>;
+
+export const BatchProgressResponseSchema = z.object({
+  results: z.array(BatchProgressEventItemResultSchema),
+  totalProcessed: z.number().int().nonnegative(),
+  totalExpEarned: z.number().int().nonnegative(),
+});
+
+export type BatchProgressResponseDto = z.infer<typeof BatchProgressResponseSchema>;

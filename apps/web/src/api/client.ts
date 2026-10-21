@@ -11,6 +11,8 @@ import {
   SubmitAnswerDto,
   QuestionResultDto,
   UserStatsDto,
+  BatchProgressResponseDto,
+  OfflinePackageDataDto,
   JlptLevel,
   ApiResponse,
 } from '@sakura/shared';
@@ -200,6 +202,32 @@ export class ApiClient {
     const json: ApiResponse<QuestionResultDto> = await res.json();
     if (!json.success || !json.data) {
       throw new Error(json.error?.message ?? 'Failed to submit answer');
+    }
+    return json.data;
+  }
+
+  // Batch Sync for Offline Learning Events
+  async syncBatchEvents(events: ProgressEventDto[]): Promise<BatchProgressResponseDto> {
+    const res = await fetch(`${API_BASE}/progress/batch`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ events }),
+    });
+    const json: ApiResponse<BatchProgressResponseDto> = await res.json();
+    if (!json.success || !json.data) {
+      throw new Error(json.error?.message ?? 'Failed to synchronize batch events');
+    }
+    return json.data;
+  }
+
+  // Offline Content Packages
+  async downloadPackage(level: JlptLevel): Promise<OfflinePackageDataDto> {
+    const res = await fetch(`${API_BASE}/packages/jlpt/${level}`, {
+      headers: this.getHeaders(),
+    });
+    const json: ApiResponse<OfflinePackageDataDto> = await res.json();
+    if (!json.success || !json.data) {
+      throw new Error(json.error?.message ?? `Failed to download offline package for ${level}`);
     }
     return json.data;
   }

@@ -285,6 +285,49 @@
 }
 ```
 
+#### `POST /api/v1/progress/batch` (Idempotent Batch Sync)
+
+- **Mục đích**: Đồng bộ lô nhiều sự kiện học tập từ IndexedDB Outbox của client sau khi ngoại tuyến.
+- **Headers**: `Authorization: Bearer <token>`
+- **Request Body**:
+
+```json
+{
+  "events": [
+    {
+      "clientEventId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "itemType": "KANJI",
+      "itemId": 1,
+      "action": "SWIPE_RIGHT_KNOWN",
+      "metadata": { "timeSpentMs": 2500 }
+    }
+  ]
+}
+```
+
+- **Response 200 OK**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "results": [
+      {
+        "clientEventId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+        "recorded": true,
+        "nextReviewAt": "2026-10-22T10:00:00Z",
+        "srsStage": 1,
+        "expEarned": 5,
+        "newTotalExp": 345,
+        "currentStreakDays": 5
+      }
+    ],
+    "totalProcessed": 1,
+    "totalExpEarned": 5
+  }
+}
+```
+
 #### `GET /api/v1/progress/stats`
 
 - **Mục đích**: Thống kê số lượng thẻ theo từng giai đoạn SRS và cấp độ JLPT.
@@ -456,4 +499,37 @@
 
 #### `DELETE /api/v1/admin/grammar/:id` (Admin Only)
 - **Mục đích**: Xóa mềm (`deleted_at = NOW()`) mẫu ngữ pháp khỏi hệ thống.
+
+---
+
+### 3.8. Offline Content Packages (`/api/v1/packages`)
+
+#### `GET /api/v1/packages/jlpt/:level`
+- **Mục đích**: Tải trọn bộ gói dữ liệu học tập offline theo cấp độ JLPT (N5 - N1), bao gồm Kanji, Từ vựng, Ngữ pháp, Câu ví dụ và Ngân hàng câu hỏi trắc nghiệm.
+- **Headers**: `Authorization: Bearer <token>`
+- **Response 200 OK**:
+```json
+{
+  "success": true,
+  "data": {
+    "metadata": {
+      "packageId": "jlpt_n5",
+      "jlptLevel": "N5",
+      "title": "Gói học offline JLPT N5",
+      "description": "Trọn bộ Kanji, Từ vựng, Ngữ pháp và Câu hỏi trắc nghiệm trình độ N5",
+      "totalKanji": 10,
+      "totalVocabulary": 25,
+      "totalGrammar": 12,
+      "totalQuestions": 15,
+      "version": 1,
+      "sizeEstimateBytes": 45000,
+      "updatedAt": "2026-10-21T10:00:00Z"
+    },
+    "kanji": [ ... ],
+    "vocabulary": [ ... ],
+    "grammar": [ ... ],
+    "questions": [ ... ]
+  }
+}
+```
 

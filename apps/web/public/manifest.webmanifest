@@ -1,0 +1,27 @@
+{
+  "name": "Sakura Swipe Learning",
+  "short_name": "Sakura",
+  "description": "Nền tảng học tiếng Nhật theo định dạng thẻ vuốt dọc phong cách Anime hoa anh đào",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#fff1f2",
+  "background_color": "#ffffff",
+  "lang": "vi",
+  "categories": ["education", "books"],
+  "icons": [
+    {
+      "src": "/icons/sakura-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/sakura-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

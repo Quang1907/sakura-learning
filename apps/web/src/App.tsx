@@ -4,6 +4,8 @@ import { KanjiExplorer } from './components/KanjiExplorer.js';
 import { VocabularyExplorer } from './components/VocabularyExplorer.js';
 import { GrammarExplorer } from './components/GrammarExplorer.js';
 import { LearningStatsModal } from './components/LearningStatsModal.js';
+import { OfflineManagerModal } from './components/OfflineManagerModal.js';
+import { syncService } from './services/sync/sync.service.js';
 
 type TabType = 'FEED' | 'KANJI' | 'VOCABULARY' | 'GRAMMAR';
 
@@ -12,6 +14,17 @@ export const App: React.FC = () => {
   const [userExp, setUserExp] = useState(120);
   const [userStreak] = useState(3);
   const [showStatsModal, setShowStatsModal] = useState(false);
+  const [showOfflineModal, setShowOfflineModal] = useState(false);
+  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [pendingSyncCount, setPendingSyncCount] = useState(0);
+
+  React.useEffect(() => {
+    const unsub = syncService.subscribe((status) => {
+      setIsOnline(status.isOnline);
+      setPendingSyncCount(status.pendingCount);
+    });
+    return unsub;
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50/40 via-pink-50/20 to-white text-slate-800 flex flex-col font-sans">
@@ -31,8 +44,21 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* User Gamification Badges */}
-          <div className="flex items-center gap-2">
+          {/* User Gamification Badges & Offline Status */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onClick={() => setShowOfflineModal(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-pink-200 text-slate-700 text-xs font-bold hover:bg-pink-50 transition-colors cursor-pointer shadow-xs"
+              title="Quản lý dữ liệu ngoại tuyến & Đồng bộ"
+            >
+              <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span className="hidden sm:inline">Offline</span>
+              {pendingSyncCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-pink-500 text-white text-[10px] font-black animate-pulse">
+                  {pendingSyncCount}
+                </span>
+              )}
+            </button>
             <button
               onClick={() => setShowStatsModal(true)}
               className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold hover:bg-amber-100 transition-colors cursor-pointer"
@@ -122,6 +148,11 @@ export const App: React.FC = () => {
       {/* Learning Stats Modal */}
       {showStatsModal && (
         <LearningStatsModal onClose={() => setShowStatsModal(false)} />
+      )}
+
+      {/* Offline Storage & Sync Manager Modal */}
+      {showOfflineModal && (
+        <OfflineManagerModal onClose={() => setShowOfflineModal(false)} />
       )}
 
       {/* Footer */}
