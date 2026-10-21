@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { KanjiSwipeFeed } from './components/KanjiSwipeFeed.js';
-import { KanjiExplorer } from './components/KanjiExplorer.js';
-import { VocabularyExplorer } from './components/VocabularyExplorer.js';
-import { GrammarExplorer } from './components/GrammarExplorer.js';
-import { LearningStatsModal } from './components/LearningStatsModal.js';
-import { OfflineManagerModal } from './components/OfflineManagerModal.js';
-import { syncService } from './services/sync/sync.service.js';
+import { KanjiSwipeFeed } from './features/feed/index.js';
+import { KanjiExplorer } from './features/kanji/index.js';
+import { VocabularyExplorer } from './features/vocabulary/index.js';
+import { GrammarExplorer } from './features/grammar/index.js';
+import { LearningStatsModal } from './features/progress/index.js';
+import { OfflineManagerModal, syncService } from './features/offline/index.js';
+import { SakuraPetalsCanvas } from './components/SakuraPetalsCanvas.js';
+
 
 type TabType = 'FEED' | 'KANJI' | 'VOCABULARY' | 'GRAMMAR';
 
@@ -27,7 +28,10 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50/40 via-pink-50/20 to-white text-slate-800 flex flex-col font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50/50 via-pink-50/30 to-white text-slate-800 flex flex-col font-sans relative overflow-x-hidden">
+      {/* Sakura Blossom Falling Petals Effect */}
+      <SakuraPetalsCanvas />
+
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-pink-100/80 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

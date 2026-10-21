@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --sakura-pink-light: #fff0f5;
+    --sakura-pink: #ffb7c5;
+    --sakura-pink-deep: #ff6b8b;
+    --sakura-rose: #f43f5e;
+    --sakura-glow: rgba(244, 63, 94, 0.25);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(180deg, #fff5f7 0%, #fff0f3 50%, #ffffff 100%);
+    color: #1e293b;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Anime Glassmorphism & Sakura Styling */
+.anime-card-glass {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 228, 235, 0.85);
+  box-shadow: 0 10px 30px -5px rgba(244, 114, 182, 0.12),
+              0 4px 6px -2px rgba(244, 114, 182, 0.05);
+}
+
+.anime-card-glow {
+  box-shadow: 0 0 25px rgba(244, 114, 182, 0.3),
+              0 0 50px rgba(251, 113, 133, 0.15);
+}
+
+.anime-gradient-text {
+  background: linear-gradient(135deg, #e11d48 0%, #ec4899 50%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.anime-btn-primary {
+  background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.anime-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.45);
+}
+
+.anime-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff0f3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fbcfe8;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f472b6;
+}
+
+/* Pulse animation for sakura badges */
+@keyframes sakura-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+.animate-sakura-float {
+  animation: sakura-float 4s ease-in-out infinite;
+}

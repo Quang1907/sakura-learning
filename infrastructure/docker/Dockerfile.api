@@ -1,0 +1,40 @@
+# Multi-stage production Dockerfile for Sakura Backend API
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy root and package manifests
+COPY package.json package-lock.json tsconfig.base.json tsconfig.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY apps/api/package.json ./apps/api/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY packages/shared ./packages/shared
+COPY apps/api ./apps/api
+
+# Build shared and api packages
+RUN npm --workspace=@sakura/shared run build
+RUN npm --workspace=@sakura/api run build
+
+# Production runtime stage
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package.json package-lock.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY apps/api/package.json ./apps/api/
+
+RUN npm ci --omit=dev
+
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/src/database/migrations ./apps/api/dist/database/migrations
+
+EXPOSE 3000
+
+CMD ["node", "apps/api/dist/server.js"]

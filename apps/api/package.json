@@ -6,13 +6,13 @@
   "description": "Backend REST API for Sakura Swipe Learning",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "tsc --build && node dist/server.js",
+    "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc --build",
-    "db:test": "tsc --build && node dist/database/test-connection.js",
-    "db:migrate": "tsc --build && node dist/database/run-migrations.js",
+    "db:test": "tsx src/database/test-connection.ts",
+    "db:migrate": "tsx src/database/run-migrations.ts",
     "test": "vitest run",
-    "lint": "echo \"API lint placeholder\""
+    "lint": "eslint ."
   },
   "dependencies": {
     "@sakura/shared": "*",

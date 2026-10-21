@@ -127,3 +127,17 @@ Tài liệu này ghi lại các quyết định kỹ thuật và kiến trúc qu
 - **Hệ quả**:
   - _Ưu điểm_: Trải nghiệm học tập liền mạch, không gián đoạn, bảo toàn 100% dữ liệu học viên, tải app như native iOS.
   - _Đánh đổi_: Cần kiểm soát dung lượng IndexedDB thông qua API `navigator.storage.estimate()` và duy trì song song logic chấm điểm offline và online.
+
+---
+
+## ADR-012: Hệ thống Giao diện Anime Sakura & Cổng Quản trị Admin Portal View
+
+- **Bối cảnh**: Giao diện ứng dụng Web học viên và Admin Portal cần thẩm mỹ cao đúng tinh thần phong cách hoa anh đào (Sakura/Anime) như đặc tả trong `AGENTS.md`. Cổng Admin cần có view hoàn chỉnh để quản trị nội dung.
+- **Quyết định**:
+  1. Tích hợp `@tailwindcss/vite` vào build pipeline của cả Web và Admin.
+  2. Bổ sung `apps/admin/index.html`, `apps/admin/src/main.tsx` và cấu hình `apps/admin/vite.config.ts` để khởi chạy độc lập trên port 5174.
+  3. Xây dựng component `SakuraPetalsCanvas` hiệu ứng cánh hoa anh đào rơi thời gian thực tương tác với cử chỉ chuột/ngón tay và có nút bật/tắt tiện lợi.
+- **Hệ quả**:
+  - _Ưu điểm_: Giao diện chuẩn phong cách Anime hoa anh đào, màu sắc HSL hài hòa, glassmorphism cao cấp, hiệu năng 60fps trên Canvas. Cổng Admin có view trực quan đầy đủ để quản trị Kanji, Từ vựng, Ngữ pháp.
+  - _Đánh đổi_: Thêm một canvas nền nhưng chạy ở chế độ lightweight và có nút bật/tắt chủ động.
+

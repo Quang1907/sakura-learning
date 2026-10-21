@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sakura-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${DB_NAME:-sakura_learning}
+      MYSQL_USER: ${DB_USER:-sakura_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-sakura_secret}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../../apps/api/src/database/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sakura-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: sakura-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-sakura_user}
+      DB_PASSWORD: ${DB_PASSWORD:-sakura_secret}
+      DB_NAME: ${DB_NAME:-sakura_learning}
+      JWT_SECRET: ${JWT_SECRET:-production_secret_key_minimum_32_characters}
+      CORS_ORIGIN: http://localhost:5173,http://localhost:80,https://sakura.app
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web
+    container_name: sakura-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
+  redis_data:
