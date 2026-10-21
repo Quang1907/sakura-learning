@@ -7,22 +7,27 @@
 Mục tiêu chính:
 - Biến thời gian "chết" mỗi ngày (trên xe bus, giờ nghỉ giải lao) thành các phiên học tiếng Nhật tập trung và cuốn hút.
 - Giúp người học làm quen và ghi nhớ Kanji, Từ vựng, Ngữ pháp từ cấp độ N5 đến N1 theo lộ trình cá nhân hóa.
+- Tạo cảm giác tiến bộ liên tục thông qua gamification (EXP, Streak, cấp độ danh hiệu) và phản hồi tức thì.
 
 ---
 
 ## 2. Phân Tích Phạm Vi: MVP vs. Giai Đoạn Tiếp Theo
 
 ### 2.1. Phạm vi MVP (Phase 0 – Phase 3 & 4 Cốt lõi)
-- **Nội dung học**: Tập trung trọn vẹn vào **Kanji** (N5, N4) và mở rộng cho **Từ vựng** N5.
+- **Nội dung học**:
+  - Tập trung trọn vẹn vào **Kanji** (N5, N4) và mở rộng cho **Từ vựng** N5.
+  - Hỗ trợ đầy đủ Furigana, âm Hán-Việt, âm On/Kun, số nét, ví dụ song ngữ Nhật - Việt.
 - **Trải nghiệm vuốt**:
-  - Vuốt dọc (lên: thẻ tiếp theo, xuống: thẻ trước trong lịch sử phiên).
-  - Vuốt ngang trên thẻ kiến thức (phải: Đã biết, trái: Cần học lại).
+  - Vuốt dọc: Lên (chuyển sang thẻ tiếp theo), Xuống (quay lại thẻ trước nếu còn trong lịch sử phiên).
+  - Vuốt ngang: Phải (Đã biết / Tự đánh giá nhớ tốt), Trái (Học lại / Cần củng cố sớm).
   - Nút bấm trợ năng tương đương trên giao diện cho mọi thao tác cử chỉ.
 - **Dạng câu hỏi MVP**:
-  - Trắc nghiệm A/B/C/D (Kanji → cách đọc, Kanji → nghĩa Hán Việt / Việt, Từ vựng → nghĩa).
+  - Trắc nghiệm 4 lựa chọn A/B/C/D (Kanji → cách đọc hiragana, Kanji → nghĩa Hán Việt / Việt, Từ vựng → nghĩa).
   - Điền đáp án hiragana (nhập cách đọc cho Kanji/Từ vựng, chấp nhận nhiều biến thể đáp án).
 - **Thuật toán Feed (SRS cơ bản)**: Tỷ lệ phân phối 60% Thẻ mới, 30% Thẻ cần ôn tập, 10% Câu hỏi kiểm tra.
-- **Quản lý người dùng**: Đăng ký, Đăng nhập (JWT), lưu lịch sử học tập và trạng thái thẻ (Đã biết, Cần học lại, Đang học).
+- **Quản lý người dùng & Tiến trình**:
+  - Đăng ký, Đăng nhập (JWT), Lưu mục tiêu JLPT.
+  - Lưu trạng thái từng thẻ (New, Learning, Review Due, Mastered) và lịch sử thao tác với Idempotency chống ghi trùng.
 - **Trang Admin tối giản**: Xem danh sách nội dung, thêm/sửa Kanji và xem số lượng thống kê cơ bản.
 
 ### 2.2. Giai đoạn tiếp theo (Post-MVP / Full Vision)
@@ -35,12 +40,12 @@ Mục tiêu chính:
 
 ---
 
-## 3. Chân Dung Người Dùng & Hành Trình (User Journeys)
+## 3. Chân Dung Người Dùng & Hành Trình (User Personas & Journeys)
 
 ### 3.1. Chân dung người dùng (User Personas)
 - **Linh (22 tuổi - Sinh viên/Người đi làm bận rộn)**: Đang ôn thi JLPT N4, có khoảng 10-15 phút rảnh rỗi trên tàu/xe buýt. Cần ứng dụng mở nhanh, vuốt nhẹ là học được ngay mà không phải thiết lập cấu hình rườm rà.
 - **Quân (28 tuổi - Kỹ sư phần mềm làm việc với đối tác Nhật)**: Muốn tăng cường vốn Kanji N3-N2, thích các bài tập phản xạ nhanh, cần giải thích âm Hán Việt và cấu tạo bộ thủ.
-- **Admin / Giáo viên tiếng Nhật**: Cần công cụ quản lý nội dung trực quan, thêm mới Kanji/Từ vựng chuẩn xác kèm ví dụ và câu hỏi kiểm tra.
+- **Thầy Tuấn (35 tuổi - Giáo viên tiếng Nhật / Admin)**: Cần công cụ quản lý nội dung trực quan, thêm mới Kanji/Từ vựng chuẩn xác kèm ví dụ và câu hỏi kiểm tra.
 
 ### 3.2. Hành trình người dùng chính (Primary User Journey - Học viên)
 ```mermaid
@@ -123,3 +128,42 @@ Mỗi thẻ hiển thị toàn màn hình theo tỷ lệ di động (tối ưu d
   - Dưới chân màn hình luôn có thanh điều khiển phụ (Toolbar) gồm các nút bấm:
     - ⬅️ *Trước* | ❌ *Chưa thuộc* | 💡 *Gợi ý/Chi tiết* | ✅ *Đã nhớ* | ➡️ *Kế tiếp*
   - Hỗ trợ đầy đủ phím tắt bàn phím cho Desktop: Phím mũi tên Lên/Xuống/Trái/Phải và phím cách (Space).
+
+---
+
+## 7. Phân Cấp JLPT (N5 - N1) & Định Tuyến Nội Dung
+
+Hệ thống phân chia kho dữ liệu theo 5 cấp độ chuẩn JLPT:
+- **N5 (Sơ cấp 1)**: ~100 Kanji, ~800 Từ vựng, các cấu trúc ngữ pháp cơ bản (Desu, Masu, trợ từ wa, ga, o, ni, de...).
+- **N4 (Sơ cấp 2)**: ~180 Kanji, ~1,500 Từ vựng, thể Te, thể Khả năng, Câu điều kiện (tara, ba, to...).
+- **N3 (Trung cấp)**: ~370 Kanji, ~3,750 Từ vựng, cấu trúc diễn đạt tự nhiên, kính ngữ cơ bản.
+- **N2 (Trung-Cao cấp)**: ~400 Kanji, ~6,000 Từ vựng, văn phong tin tức, công sở, thương mại.
+- **N1 (Cao cấp)**: ~1,200 Kanji còn lại, văn phong nghị luận, thành ngữ, sắc thái tinh tế.
+
+**Quy tắc định tuyến nội dung:**
+- Người học chọn một mục tiêu JLPT chính (`target_jlpt`).
+- Khi học, feed ưu tiên cấp độ mục tiêu đã chọn. Người học có thể mở rộng học đồng thời hoặc chuyển đổi cấp độ linh hoạt bất cứ lúc nào.
+
+---
+
+## 8. Cấp Độ Người Dùng (User Level) & Tiến Trình Học Tập
+
+Hệ thống phân biệt rõ 3 khái niệm:
+1. **JLPT Mục Tiêu**: Cấp độ kiến thức người dùng đang ôn luyện (N5, N4, N3, N2, N1).
+2. **User Level & EXP**: Cấp độ trải nghiệm người dùng trong ứng dụng. Mỗi lần vuốt học thẻ nhận +5 EXP, trả lời đúng câu hỏi nhận +10 EXP. Điểm EXP tích lũy giúp tăng cấp bậc (Cánh hoa -> Nụ hoa -> Hoa nở rực rỡ).
+3. **Mức Độ Thành Thạo Kiến Thức (SRS Mastery Stage)**:
+   - **Giai đoạn 0 (Mới - New)**: Chưa từng học.
+   - **Giai đoạn 1 - 2 (Đang học - Apprentice)**: Khoảng cách ôn tập: 4 giờ -> 8 giờ.
+   - **Giai đoạn 3 - 4 (Thành thạo - Guru)**: Khoảng cách ôn tập: 1 ngày -> 3 ngày.
+   - **Giai đoạn 5 - 6 (Nắm vững - Master)**: Khoảng cách ôn tập: 1 tuần -> 2 tuần.
+   - **Giai đoạn 7 - 8 (Khắc sâu - Enlightened / Burned)**: Khoảng cách ôn tập: 1 tháng -> 4 tháng.
+
+---
+
+## 9. Tiêu Chí Nghiệm Thu Cụ Thể (Acceptance Criteria)
+
+- **AC-01 (Vuốt dọc mượt mà)**: Người dùng có thể vuốt lên để chuyển thẻ tiếp theo với độ trễ < 100ms; vuốt xuống quay lại thẻ trước mà không làm mất trạng thái.
+- **AC-02 (Vuốt ngang ghi nhận SRS)**: Vuốt phải hiển thị huy hiệu "Đã biết" màu xanh; vuốt trái hiển thị huy hiệu "Cần học lại" màu cam; dữ liệu được gửi về backend và phản hồi thành công.
+- **AC-03 (Chống gian lận thẻ câu hỏi)**: Không thể vuốt bỏ qua thẻ câu hỏi nếu chưa nộp câu trả lời; sau khi nộp, hiển thị kết quả đúng/sai kèm giải thích chi tiết trong vòng 200ms.
+- **AC-04 (Hỗ trợ nút bấm trợ năng)**: Người dùng bấm các nút ⬅️, ❌, ✅, ➡️ trên thanh điều khiển cho kết quả tương đương 100% với thao tác vuốt cảm ứng.
+- **AC-05 (Chống trùng lặp tiến trình)**: Khi client thử lại gửi cùng một `clientEventId`, hệ thống trả về mã 200 thành công mà không cộng dồn thêm EXP hay sai lệch lịch ôn tập.

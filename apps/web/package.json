@@ -1,0 +1,16 @@
+{
+  "name": "@sakura/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mobile-first Web App for Sakura Swipe Learning",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "echo \"Web dev mode placeholder\"",
+    "build": "echo \"Web build placeholder\"",
+    "test": "echo \"Web test placeholder\"",
+    "lint": "echo \"Web lint placeholder\""
+  },
+  "dependencies": {
+    "@sakura/shared": "*"
+  }
+}

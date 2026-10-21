@@ -1,0 +1,16 @@
+{
+  "name": "@sakura/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend REST API for Sakura Swipe Learning",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "echo \"API dev mode placeholder\"",
+    "build": "echo \"API build placeholder\"",
+    "test": "echo \"API test placeholder\"",
+    "lint": "echo \"API lint placeholder\""
+  },
+  "dependencies": {
+    "@sakura/shared": "*"
+  }
+}

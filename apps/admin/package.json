@@ -1,0 +1,16 @@
+{
+  "name": "@sakura/admin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Admin and Content Moderation Portal for Sakura Swipe Learning",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "echo \"Admin dev mode placeholder\"",
+    "build": "echo \"Admin build placeholder\"",
+    "test": "echo \"Admin test placeholder\"",
+    "lint": "echo \"Admin lint placeholder\""
+  },
+  "dependencies": {
+    "@sakura/shared": "*"
+  }
+}

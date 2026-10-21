@@ -7,47 +7,74 @@
 
 ---
 
-## 2. Phân Tầng Kiểm Thử (Test Levels & Tools)
+## 2. Phân Tầng Kiểm Thử & Công Cụ (Test Levels & Tools)
 
 | Tầng kiểm thử | Công cụ / Thư viện | Phạm vi áp dụng | Mục tiêu Coverage |
 | :--- | :--- | :--- | :--- |
 | **Unit Test** | Vitest | Business Services (FeedEngineService, SrsService, QuestionGradingService), Zod Schemas | >= 85% dòng lệnh |
 | **Integration Test** | Vitest + Supertest | API Routers, Middleware, Controllers, Database Repositories với MySQL Test DB | >= 75% endpoints |
-| **Component Test** | Vitest + React Testing Library | Thẻ Kanji, Thẻ Từ vựng, Thẻ Câu hỏi, Nút bấm trợ năng | Các tương tác cốt lõi |
-| **E2E Test** | Playwright | Luồng học sinh từ Đăng nhập -> Vuốt thẻ -> Trả lời câu hỏi -> Cập nhật streak | Luồng Critical Path |
+| **Component Test** | Vitest + React Testing Library | Thẻ Kanji, Thẻ Từ vựng, Thẻ Câu hỏi, Thanh điều khiển trợ năng | Các tương tác giao diện |
+| **E2E Test** | Playwright | Toàn bộ luồng người học từ Đăng nhập -> Vuốt thẻ -> Làm bài -> Cập nhật streak | Luồng người dùng chính |
+| **Mobile UX & Perf** | Lighthouse CI | Kiểm tra 60fps khi vuốt, PWA manifest, SEO và tính tiếp cận (Accessibility) | Điểm số >= 90 |
 
 ---
 
-## 3. Ma Trận Kiểm Thử Nghiệp Vụ Cốt Lõi (Core Test Matrix)
+## 3. Chiến Lược Cô Lập Cơ Sở Dữ Liệu Test (Test Database Isolation)
 
-### 3.1. Thuật Toán SRS & Feed Engine
-- **Test Case 1 (Tỷ lệ phân phối)**: Gọi `FeedEngineService.generateFeed(user)` với 10 thẻ; kiểm tra kết quả trả về đúng tỷ lệ ~60% mới, ~30% ôn, ~10% câu hỏi.
-- **Test Case 2 (Chống lặp)**: Đảm bảo không có cùng 1 Kanji xuất hiện 2 lần trong 10 thẻ gần nhất.
-- **Test Case 3 (Không câu hỏi liên tiếp)**: Đảm bảo giữa 2 thẻ câu hỏi luôn có ít nhất 1 thẻ kiến thức.
-- **Test Case 4 (Tính toán SRS khi đúng/sai)**:
-  - Khi người dùng vuốt "Đã biết" hoặc trả lời đúng: `srs_stage` tăng 1, `next_review_at` giãn ra (1 ngày -> 3 ngày -> 7 ngày...).
-  - Khi vuốt "Cần học lại" hoặc trả lời sai: `srs_stage` đặt lại về 0 hoặc 1, `next_review_at` đặt về 4 - 8 giờ sau.
-
-### 3.2. Chấm Điểm Câu Hỏi (Question Grading Engine)
-- **Test Case 5 (Trắc nghiệm A/B/C/D)**: Chọn đúng optionId -> trả về `isCorrect: true`, giải thích chi tiết. Chọn sai -> trả về `isCorrect: false`.
-- **Test Case 6 (Điền văn bản - Nhiều đáp án chấp nhận)**: Với chữ 日 trong 日本, chấp nhận "に", "ni", "Ni", từ chối "つき", "nichi".
-
-### 3.3. Tính Toàn Vẹn & Chống Trùng Lặp (Idempotency)
-- **Test Case 7 (Idempotent Event)**: Gửi cùng một `clientEventId` 2 lần liên tiếp -> Lần thứ 2 trả về kết quả thành công của lần 1 mà không tăng EXP hay thay đổi lại `srs_stage`.
+Để tránh làm sai lệch dữ liệu thử nghiệm trong quá trình phát triển:
+1. **Database riêng biệt**: Integration tests sử dụng cơ sở dữ liệu riêng `sakura_learning_test`.
+2. **Setup & Teardown**:
+   - Trước khi chạy test suite: Chạy migration để đảm bảo cấu trúc bảng mới nhất.
+   - Trước mỗi test case (`beforeEach`): Sử dụng Transaction rollback hoặc truncate các bảng ghi nhận tiến trình (`learning_events`, `user_progress`, `answer_submissions`) để đảm bảo tính độc lập tuyệt đối giữa các bài test.
+3. **Seed Data Chuẩn**: Nạp sẵn một bộ từ điển mẫu (10 Kanji N5, 10 Từ vựng N5, 5 Câu hỏi) cố định phục vụ cho việc kiểm thử feed.
 
 ---
 
-## 4. Quy Trình Chạy Kiểm Thử Bắt Buộc
+## 4. Ma Trận Kiểm Thử Nghiệp Vụ Cốt Lõi (Core Test Matrix)
 
-Trước khi commit bất kỳ code nào hoặc bàn giao task:
+### 4.1. Thuật Toán SRS & Feed Engine
+- **TC-SRS-01 (Tỷ lệ phân phối 60/30/10)**:
+  - *Input*: Học viên N5 có 20 thẻ đã học, 5 thẻ đến hạn ôn, 5 câu hỏi trong ngân hàng. Yêu cầu nạp 10 thẻ.
+  - *Expected*: Trả về xấp xỉ 6 thẻ mới, 3 thẻ ôn tập, 1 thẻ câu hỏi.
+- **TC-SRS-02 (Quy tắc chống lặp thẻ)**:
+  - *Input*: Lấy 10 thẻ tiếp theo.
+  - *Expected*: Không có bất kỳ thẻ Kanji nào xuất hiện 2 lần trong 10 thẻ gần nhất.
+- **TC-SRS-03 (Chống câu hỏi liên tiếp)**:
+  - *Input*: Hàng đợi sinh ra ngẫu nhiên có 2 câu hỏi.
+  - *Expected*: Feed Engine tự động xen kẽ ít nhất 1 thẻ kiến thức giữa 2 câu hỏi.
+- **TC-SRS-04 (Cập nhật SRS khi vuốt Đã Nhớ)**:
+  - *Input*: Thẻ đang ở `srs_stage = 0`, nhận action `SWIPE_RIGHT_KNOWN`.
+  - *Expected*: `srs_stage` tăng lên 1, `next_review_at` giãn ra sau 4 giờ.
+- **TC-SRS-05 (Cập nhật SRS khi vuốt Cần Học Lại)**:
+  - *Input*: Thẻ đang ở `srs_stage = 4`, nhận action `SWIPE_LEFT_AGAIN`.
+  - *Expected*: `srs_stage` lùi về 2, `next_review_at` đặt về 4 giờ sau.
+
+### 4.2. Chấm Điểm & Động Cơ Câu Hỏi (Question Engine)
+- **TC-QST-01 (Trắc nghiệm A/B/C/D)**:
+  - *Input*: Gửi `selectedOptionId = 1` (đúng).
+  - *Expected*: `isCorrect = true`, trả về giải thích, cập nhật SRS stage tăng.
+- **TC-QST-02 (Tự luận điền cách đọc - Nhiều biến thể)**:
+  - *Input*: Kanji 日 trong 日本, chấp nhận: `["に", "ni", "Ni"]`.
+  - *Expected*: Nhập "ni" -> Pass; Nhập "nichi" -> Fail, giải thích chi tiết.
+
+### 4.3. Chống Trùng Lặp Tiến Trình (Idempotency)
+- **TC-IDEM-01 (Gửi lặp cùng Client Event ID)**:
+  - *Input*: Gửi cùng một `clientEventId` 2 lần liên tiếp với payload giống hệt nhau.
+  - *Expected*: Cả 2 lần đều trả về 200 OK; tổng số EXP của người dùng chỉ được cộng đúng 1 lần duy nhất; bảng `learning_events` chỉ có đúng 1 bản ghi.
+
+---
+
+## 5. Quy Trình Chạy Kiểm Thử Bắt Buộc
+
+Trước khi commit bất kỳ thay đổi nào:
 ```bash
-# 1. Chạy lint và type check toàn bộ monorepo
+# 1. Kiểm tra cú pháp và kiểu dữ liệu TypeScript
 npm run lint
 npm run type-check
 
 # 2. Chạy toàn bộ Unit & Integration tests
 npm run test
 
-# 3. Chạy kiểm thử có báo cáo độ bao phủ
+# 3. Chạy kiểm thử có đo độ bao phủ code
 npm run test:coverage
 ```

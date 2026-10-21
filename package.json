@@ -1,0 +1,28 @@
+{
+  "name": "sakura-swipe-learning",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nền tảng học tiếng Nhật theo định dạng thẻ vuốt dọc",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "keywords": [
+    "japanese-learning",
+    "jlpt",
+    "kanji",
+    "srs",
+    "swipe-feed",
+    "mobile-first"
+  ],
+  "author": "Sakura Learning Team",
+  "license": "UNLICENSED"
+}

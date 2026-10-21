@@ -22,12 +22,13 @@ graph TD
 - **Tiêu chí hoàn thành**: Toàn bộ 14 tài liệu dự án được tạo, đối soát không mâu thuẫn kỹ thuật.
 
 ### 🌸 Phase 1 — Project Foundation & Monorepo Setup
-- **Mục tiêu**: Khởi tạo cấu trúc monorepo hoàn chỉnh với NPM Workspaces, cài đặt TypeScript strict mode, ESLint, Prettier, cấu hình database MySQL connection pool và test runner (Vitest).
+- **Mục tiêu**: Khởi tạo cấu trúc monorepo hoàn chỉnh với NPM Workspaces, cài đặt TypeScript strict mode, ESLint, Prettier, cấu hình database MySQL connection pool, test runner (Vitest) và nền móng Auth cơ bản (JWT Helper, Auth Middleware, seed tài khoản test).
 - **Dependencies**: Hoàn thành Phase 0.
 - **Deliverables**:
   - `package.json` root và packages (`apps/web`, `apps/admin`, `apps/api`, `packages/shared`).
   - Database migration script chạy thành công trên MySQL nội bộ.
-  - API server khởi chạy với endpoint `/health` trả về 200 OK.
+  - API server khởi chạy với endpoint `/api/v1/health` trả về 200 OK.
+  - Nền móng Auth tối giản (JWT verification middleware và seed tài khoản mặc định `admin@sakura.app`, `user@sakura.app`) phục vụ ngay cho Phase 2 & Phase 3.
 
 ### 🌸 Phase 2 — Core Learning Engine & Data Models
 - **Mục tiêu**: Thiết kế và triển khai Shared Types, DTOs, Zod Validation Schemas, thuật toán phân phối nội dung Feed và thuật toán Spaced Repetition (SRS SM-2 cải tiến).
@@ -53,11 +54,13 @@ graph TD
   - Feed tích hợp kết hợp linh hoạt Thẻ kiến thức và Câu hỏi kiểm tra.
   - Trang thống kê tiến trình học tập (Streak, số thẻ đã thuộc, EXP).
 
-### 🌸 Phase 5 — Users & Admin Governance
-- **Mục tiêu**: Hoàn thiện hệ thống Authentication (JWT, bcrypt), User Profiles, phân quyền RBAC (User vs Admin), kiểm duyệt nội dung và công cụ import dữ liệu JLPT N5-N1.
+### 🌸 Phase 5 — Full User Management & Content Governance
+- **Mục tiêu**: Hoàn thiện cổng quản lý người dùng nâng cao (Đăng ký tài khoản công khai, Quên mật khẩu / Reset password qua email, Profile mở rộng), phân quyền RBAC đa cấp độ, kiểm duyệt nội dung cộng đồng và công cụ import dữ liệu JLPT N5-N1 hàng loạt.
 - **Dependencies**: Hoàn thành Phase 4.
 - **Deliverables**:
-  - Màn hình Đăng ký, Đăng nhập, Quên mật khẩu.
+  - Giao diện Đăng ký, Đăng nhập hoàn chỉnh trên Web/Admin.
+  - Luồng Quên mật khẩu, đổi thông tin hồ sơ và avatar.
+  - Bảng điều khiển quản trị danh sách người dùng, phân quyền (USER, MODERATOR, ADMIN) và khóa tài khoản.
   - Bộ công cụ Import/Export dữ liệu từ CSV/JSON cho giáo viên/admin.
 
 ### 🌸 Phase 6 — Offline PWA & Production Release

@@ -9,6 +9,7 @@
 **Sakura Swipe Learning** được thiết kế nhằm giải quyết vấn đề nhanh nản chí khi học tiếng Nhật qua sách vở hay flashcard truyền thống. Bằng cách kết hợp giao diện vuốt dọc gây nghiện, thẩm mỹ hoa anh đào (Sakura/Anime) hiện đại và thuật toán phân phối nội dung thông minh, người học có thể tận dụng từng phút rảnh rỗi để học và ôn tập hiệu quả.
 
 ### Điểm nổi bật:
+
 - 📱 **Mobile-First Experience**: Tối ưu tuyệt đối cho iPhone và thiết bị di động, thao tác vuốt dọc mượt mà kèm nút bấm trợ năng.
 - 🎴 **Đa Dạng Thể Loại Thẻ Học**: Kanji, Từ vựng, Ngữ pháp, Mẫu câu, Hội thoại và Ngân hàng câu hỏi trắc nghiệm/ghép câu/tự luận tương tác.
 - 🧠 **Smart SRS Feed Engine**: Thuật toán phân phối thẻ thông minh kết hợp kiến thức mới, nội dung ôn tập ngắt quãng và câu hỏi củng cố điểm yếu.
@@ -46,17 +47,25 @@ sakura-learning/
 
 ---
 
-## 🚀 4. Hướng Dẫn Cài Đặt & Chạy Thử Nghiệm
+## 🚀 4. Hướng Dẫn Vận Hành Monorepo (NPM Workspaces)
 
-*(Sẽ được cập nhật chi tiết sau khi hoàn thành Phase 1 — Project Foundation)*
-
+### 4.1. Cài đặt và liên kết Workspaces
 ```bash
-# Cài đặt toàn bộ dependencies trong monorepo
+# Cài đặt và tự động liên kết (symlink) các package trong monorepo
 npm install
 
-# Khởi chạy toàn bộ hệ thống ở môi trường Development
-npm run dev
+# Kiểm tra danh sách workspaces đã nhận diện
+npm query ":root > *"
+```
 
-# Chạy kiểm thử tự động
+### 4.2. Chạy Lệnh Trên Toàn Bộ Workspaces
+```bash
+# Chạy kiểm thử tự động trên toàn bộ workspaces
 npm test
+
+# Chạy kiểm tra linting trên toàn bộ workspaces
+npm run lint
+
+# Chạy lệnh trên một workspace cụ thể (ví dụ: apps/api)
+npm run test --workspace=@sakura/api
 ```
