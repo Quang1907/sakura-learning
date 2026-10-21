@@ -1,9 +1,11 @@
 /**
  * @sakura/admin
- * Admin Portal Entrypoint placeholder
+ * Admin and Content Moderation Portal Entrypoint
  */
 
-import { SAKURA_SHARED_VERSION } from '@sakura/shared';
-
 export const ADMIN_VERSION = '0.1.0';
-export const SHARED_REF = SAKURA_SHARED_VERSION;
+
+export * from './api/admin-client.js';
+export * from './components/KanjiTable.js';
+export * from './components/KanjiFormModal.js';
+export * from './App.js';

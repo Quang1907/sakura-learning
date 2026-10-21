@@ -20,26 +20,26 @@
 
 ## 2. Danh Sách Các Thực Thể (Entity Catalog)
 
-| Nhóm | Tên Thực Thể (Entity) | Mục Đích Nghiệp Vụ | Soft Delete |
-| :--- | :--- | :--- | :--- |
-| **Người dùng** | `users` | Lưu trữ tài khoản, mật khẩu băm, vai trò (Role: USER, ADMIN, MODERATOR). | Có |
-| | `user_profiles` | Lưu thông tin hiển thị, mục tiêu JLPT, điểm EXP, chuỗi ngày streak, tỷ lệ feed. | Không (1-1 với users) |
-| **Nội dung học** | `lessons` | Khung bài học theo chủ đề hoặc giáo trình (ví dụ: Minna no Nihongo, Kanji Look and Learn). | Có |
-| | `lesson_items` | Bảng cầu nối xác định kiến thức nào thuộc bài học nào. | Không |
-| | `kanji` | Kho chữ Hán, âm Hán Việt, Onyomi, Kunyomi, số nét, bộ thủ, nghĩa tiếng Việt. | Có |
-| | `kanji_jlpt` | Liên kết Many-to-Many giữa Kanji và các cấp độ JLPT (N5 - N1). | Không |
-| | `kanji_examples` | Các từ ghép và câu ví dụ minh họa cách đọc cho chữ Kanji. | Có |
-| | `vocabulary` | Từ vựng, cách đọc hiragana/katakana, từ loại, nghĩa tiếng Việt, link audio. | Có |
-| | `vocab_jlpt` | Liên kết Many-to-Many giữa Từ vựng và các cấp độ JLPT. | Không |
-| | `vocab_kanji` | Bảng liên kết từ vựng được cấu tạo từ những chữ Kanji nào. | Không |
-| | `grammar` | Mẫu ngữ pháp, cấu trúc kết nối, ý nghĩa, ghi chú cách dùng. | Có |
-| | `grammar_jlpt` | Liên kết Many-to-Many giữa Mẫu ngữ pháp và cấp độ JLPT. | Không |
-| | `sentences` | Kho câu ví dụ hoàn chỉnh, câu đàm thoại song ngữ Nhật - Việt. | Có |
-| **Câu hỏi & Đề thi** | `questions` | Ngân hàng câu hỏi trắc nghiệm, điền khuyết, sắp xếp từ, nối nghĩa. | Có |
-| | `question_options` | Các phương án lựa chọn A/B/C/D cho câu hỏi trắc nghiệm. | Không |
-| **Tiến trình & SRS** | `user_progress` | Mức độ thành thạo (SRS stage, ease factor, ngày ôn tiếp theo) của học viên cho từng item. | Không |
-| | `learning_events` | Nhật ký sự kiện thao tác vuốt / trả lời câu hỏi có mã `client_event_id` chống trùng. | Không |
-| | `answer_submissions` | Lịch sử chi tiết câu trả lời, thời gian phản hồi (ms) phục vụ phân tích điểm yếu. | Không |
+| Nhóm                 | Tên Thực Thể (Entity) | Mục Đích Nghiệp Vụ                                                                         | Soft Delete           |
+| :------------------- | :-------------------- | :----------------------------------------------------------------------------------------- | :-------------------- |
+| **Người dùng**       | `users`               | Lưu trữ tài khoản, mật khẩu băm, vai trò (Role: USER, ADMIN, MODERATOR).                   | Có                    |
+|                      | `user_profiles`       | Lưu thông tin hiển thị, mục tiêu JLPT, điểm EXP, chuỗi ngày streak, tỷ lệ feed.            | Không (1-1 với users) |
+| **Nội dung học**     | `lessons`             | Khung bài học theo chủ đề hoặc giáo trình (ví dụ: Minna no Nihongo, Kanji Look and Learn). | Có                    |
+|                      | `lesson_items`        | Bảng cầu nối xác định kiến thức nào thuộc bài học nào.                                     | Không                 |
+|                      | `kanji`               | Kho chữ Hán, âm Hán Việt, Onyomi, Kunyomi, số nét, bộ thủ, nghĩa tiếng Việt.               | Có                    |
+|                      | `kanji_jlpt`          | Liên kết Many-to-Many giữa Kanji và các cấp độ JLPT (N5 - N1).                             | Không                 |
+|                      | `kanji_examples`      | Các từ ghép và câu ví dụ minh họa cách đọc cho chữ Kanji.                                  | Có                    |
+|                      | `vocabulary`          | Từ vựng, cách đọc hiragana/katakana, từ loại, nghĩa tiếng Việt, link audio.                | Có                    |
+|                      | `vocab_jlpt`          | Liên kết Many-to-Many giữa Từ vựng và các cấp độ JLPT.                                     | Không                 |
+|                      | `vocab_kanji`         | Bảng liên kết từ vựng được cấu tạo từ những chữ Kanji nào.                                 | Không                 |
+|                      | `grammar`             | Mẫu ngữ pháp, cấu trúc kết nối, ý nghĩa, ghi chú cách dùng.                                | Có                    |
+|                      | `grammar_jlpt`        | Liên kết Many-to-Many giữa Mẫu ngữ pháp và cấp độ JLPT.                                    | Không                 |
+|                      | `sentences`           | Kho câu ví dụ hoàn chỉnh, câu đàm thoại song ngữ Nhật - Việt.                              | Có                    |
+| **Câu hỏi & Đề thi** | `questions`           | Ngân hàng câu hỏi trắc nghiệm, điền khuyết, sắp xếp từ, nối nghĩa.                         | Có                    |
+|                      | `question_options`    | Các phương án lựa chọn A/B/C/D cho câu hỏi trắc nghiệm.                                    | Không                 |
+| **Tiến trình & SRS** | `user_progress`       | Mức độ thành thạo (SRS stage, ease factor, ngày ôn tiếp theo) của học viên cho từng item.  | Không                 |
+|                      | `learning_events`     | Nhật ký sự kiện thao tác vuốt / trả lời câu hỏi có mã `client_event_id` chống trùng.       | Không                 |
+|                      | `answer_submissions`  | Lịch sử chi tiết câu trả lời, thời gian phản hồi (ms) phục vụ phân tích điểm yếu.          | Không                 |
 
 ---
 
@@ -53,7 +53,7 @@ erDiagram
     USERS ||--o{ ANSWER_SUBMISSIONS : "submits answers"
 
     LESSONS ||--o{ LESSON_ITEMS : "contains items"
-    
+
     KANJI ||--o{ KANJI_EXAMPLES : "has examples"
     KANJI ||--o{ KANJI_JLPT : "mapped to JLPT"
     KANJI ||--o{ VOCAB_KANJI : "forms vocabulary"
@@ -65,7 +65,7 @@ erDiagram
 
     QUESTIONS ||--o{ QUESTION_OPTIONS : "has choices"
     QUESTIONS ||--o{ ANSWER_SUBMISSIONS : "answered in"
-    
+
     USER_PROGRESS }o--|| USERS : "owned by"
     LEARNING_EVENTS }o--|| USERS : "logged for"
 ```
@@ -77,6 +77,7 @@ erDiagram
 ### 4.1. Nhóm Người Dùng & Hồ Sơ
 
 #### Bảng `users`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `email`: VARCHAR(191), NOT NULL, UNIQUE KEY `uk_users_email`.
 - `password_hash`: VARCHAR(255), NOT NULL (bcrypt hash).
@@ -87,6 +88,7 @@ erDiagram
 - `updated_at`: DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP.
 
 #### Bảng `user_profiles`
+
 - `user_id`: BIGINT UNSIGNED, PK, FK -> `users(id)` ON DELETE CASCADE.
 - `display_name`: VARCHAR(100), NOT NULL.
 - `avatar_url`: VARCHAR(255) NULL.
@@ -105,6 +107,7 @@ erDiagram
 ### 4.2. Nhóm Nội Dung Kiến Thức Cốt Lõi
 
 #### Bảng `kanji`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `character`: VARCHAR(10), NOT NULL, UNIQUE KEY `uk_kanji_character`.
 - `han_viet`: VARCHAR(100), NOT NULL (Âm Hán Việt in hoa: NHẬT, NGUYỆT...).
@@ -120,11 +123,13 @@ erDiagram
 - **Indexes**: `idx_kanji_status` (`status`, `deleted_at`).
 
 #### Bảng `kanji_jlpt`
+
 - `kanji_id`: BIGINT UNSIGNED, PK, FK -> `kanji(id)` ON DELETE CASCADE.
 - `jlpt_level`: ENUM('N5', 'N4', 'N3', 'N2', 'N1'), PK.
 - **Indexes**: `idx_kanji_jlpt_level` (`jlpt_level`).
 
 #### Bảng `kanji_examples`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `kanji_id`: BIGINT UNSIGNED, NOT NULL, FK -> `kanji(id)` ON DELETE CASCADE.
 - `word`: VARCHAR(100), NOT NULL.
@@ -137,6 +142,7 @@ erDiagram
 - **Indexes**: `idx_kanji_examples_kanji_id` (`kanji_id`).
 
 #### Bảng `vocabulary`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `word`: VARCHAR(191), NOT NULL.
 - `reading`: VARCHAR(191), NOT NULL.
@@ -151,11 +157,13 @@ erDiagram
 - **Indexes**: `idx_vocab_word` (`word`), `idx_vocab_reading` (`reading`).
 
 #### Bảng `vocab_jlpt`
+
 - `vocab_id`: BIGINT UNSIGNED, PK, FK -> `vocabulary(id)` ON DELETE CASCADE.
 - `jlpt_level`: ENUM('N5', 'N4', 'N3', 'N2', 'N1'), PK.
 - **Indexes**: `idx_vocab_jlpt_level` (`jlpt_level`).
 
 #### Bảng `grammar`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `title`: VARCHAR(191), NOT NULL.
 - `structure`: TEXT, NOT NULL (Công thức kết nối).
@@ -167,6 +175,7 @@ erDiagram
 - `updated_at`: DATETIME, NOT NULL, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP.
 
 #### Bảng `grammar_jlpt`
+
 - `grammar_id`: BIGINT UNSIGNED, PK, FK -> `grammar(id)` ON DELETE CASCADE.
 - `jlpt_level`: ENUM('N5', 'N4', 'N3', 'N2', 'N1'), PK.
 
@@ -175,6 +184,7 @@ erDiagram
 ### 4.3. Nhóm Ngân Hàng Câu Hỏi (Question Engine)
 
 #### Bảng `questions`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `item_type`: ENUM('KANJI', 'VOCABULARY', 'GRAMMAR', 'SENTENCE'), NOT NULL.
 - `item_id`: BIGINT UNSIGNED, NOT NULL.
@@ -188,6 +198,7 @@ erDiagram
 - **Indexes**: `idx_questions_item` (`item_type`, `item_id`, `deleted_at`).
 
 #### Bảng `question_options`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `question_id`: BIGINT UNSIGNED, NOT NULL, FK -> `questions(id)` ON DELETE CASCADE.
 - `content`: VARCHAR(255), NOT NULL.
@@ -200,6 +211,7 @@ erDiagram
 ### 4.4. Nhóm Tiến Trình Học Tập & Sự Kiện Chống Trùng (Progress & SRS)
 
 #### Bảng `user_progress`
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `user_id`: BIGINT UNSIGNED, NOT NULL, FK -> `users(id)` ON DELETE CASCADE.
 - `item_type`: ENUM('KANJI', 'VOCABULARY', 'GRAMMAR', 'SENTENCE'), NOT NULL.
@@ -220,6 +232,7 @@ erDiagram
   - `INDEX idx_user_review_due` (`user_id`, `next_review_at`, `status`).
 
 #### Bảng `learning_events` (Idempotency Audit Log)
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `client_event_id`: VARCHAR(64), NOT NULL (UUID v4 do client sinh ra).
 - `user_id`: BIGINT UNSIGNED, NOT NULL, FK -> `users(id)` ON DELETE CASCADE.
@@ -233,6 +246,7 @@ erDiagram
   - `INDEX idx_user_learning_history` (`user_id`, `created_at`).
 
 #### Bảng `answer_submissions` (Lịch Sử Chi Tiết Làm Bài)
+
 - `id`: BIGINT UNSIGNED, PK, Auto Increment.
 - `learning_event_id`: BIGINT UNSIGNED, NOT NULL, FK -> `learning_events(id)` ON DELETE CASCADE.
 - `user_id`: BIGINT UNSIGNED, NOT NULL, FK -> `users(id)` ON DELETE CASCADE.
@@ -268,13 +282,15 @@ Khi một thao tác học tập gửi lên server (`POST /api/v1/progress/event`
 ## 6. Chiến Lược Ràng Buộc Đa Hình & Tranh Chấp Đồng Thời (Polymorphic & Concurrency)
 
 ### 6.1. Bảo vệ tính toàn vẹn của quan hệ Đa hình (`item_type`, `item_id`)
+
 - **Vấn đề**: MySQL 8 không hỗ trợ Foreign Key trực tiếp trên cặp cột đa hình `(item_type, item_id)` nối sang nhiều bảng khác nhau (`kanji`, `vocabulary`, `grammar`).
 - **Giải pháp kiểm soát 3 lớp**:
-  1. *Lớp Validation (Zod)*: Cưỡng chế `item_type` thuộc tập Enum chuẩn `['KANJI', 'VOCABULARY', 'GRAMMAR', 'SENTENCE']`.
-  2. *Lớp Service (Integrity Check)*: Trước khi ghi bản ghi vào `user_progress` hoặc `questions`, Service gọi Repository tương ứng để kiểm tra sự tồn tại thực tế của `item_id` (ví dụ nếu `itemType === 'KANJI'` -> kiểm tra bảng `kanji WHERE id = ? AND deleted_at IS NULL`).
-  3. *Lớp Soft Delete*: Nhờ có Soft Delete (`deleted_at`), một chữ Kanji hay Từ vựng bị xóa mềm vẫn giữ nguyên bản ghi trong database, do đó các bản ghi lịch sử trong `user_progress`, `learning_events` và `answer_submissions` không bao giờ bị trỏ vào ID "ma".
+  1. _Lớp Validation (Zod)_: Cưỡng chế `item_type` thuộc tập Enum chuẩn `['KANJI', 'VOCABULARY', 'GRAMMAR', 'SENTENCE']`.
+  2. _Lớp Service (Integrity Check)_: Trước khi ghi bản ghi vào `user_progress` hoặc `questions`, Service gọi Repository tương ứng để kiểm tra sự tồn tại thực tế của `item_id` (ví dụ nếu `itemType === 'KANJI'` -> kiểm tra bảng `kanji WHERE id = ? AND deleted_at IS NULL`).
+  3. _Lớp Soft Delete_: Nhờ có Soft Delete (`deleted_at`), một chữ Kanji hay Từ vựng bị xóa mềm vẫn giữ nguyên bản ghi trong database, do đó các bản ghi lịch sử trong `user_progress`, `learning_events` và `answer_submissions` không bao giờ bị trỏ vào ID "ma".
 
 ### 6.2. Xử lý tranh chấp gửi đồng thời (Concurrent Request / Race Conditions)
+
 - Khi client bị rớt mạng và gửi đồng thời 2-3 requests có cùng `clientEventId`:
   - Ràng buộc `UNIQUE KEY uk_client_event_id` trên bảng `learning_events` sẽ ngăn chặn hoàn toàn việc ghi bản ghi thứ hai.
   - Tại tầng Repository, câu lệnh `INSERT` bắt lỗi mã `ER_DUP_ENTRY` (MySQL Error 1062). Khi gặp lỗi này, Service tự động chuyển sang luồng trả về kết quả thành công của bản ghi đã tạo trước đó mà không thực hiện lại các thao tác cộng EXP hay đổi SRS.

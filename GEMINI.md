@@ -8,19 +8,19 @@ Tài liệu này cung cấp chỉ dẫn bắt buộc cho Gemini và các AI codi
 
 Trước khi thực hiện bất kỳ thao tác nào (phân tích, tạo file, sửa code), bạn **BẮT BUỘC** phải đọc và tham chiếu các tài liệu tương ứng trong thư mục `docs/`:
 
-| Tài liệu | Mục đích & Nội dung |
-| :--- | :--- |
-| `docs/PRD.md` | Bản mô tả yêu cầu sản phẩm, hành trình người dùng, các dạng câu hỏi và nội dung học |
-| `docs/ARCHITECTURE.md` | Kiến trúc hệ thống, phân lớp backend, luồng frontend swipe feed, thuật toán nội dung |
-| `docs/DATABASE.md` | Thiết kế cơ sở dữ liệu MySQL, ERD, Schema, Index, quan hệ N5-N1 |
-| `docs/API.md` | Đặc tả REST API contracts, định dạng request/response, mã lỗi, authentication |
-| `docs/SECURITY.md` | Chiến lược bảo mật, hash mật khẩu, JWT, RBAC (User/Admin), phòng chống SQLi/XSS |
-| `docs/TESTING.md` | Chiến lược kiểm thử tự động, tiêu chí nghiệm thu, coverage target |
-| `docs/ROADMAP.md` | Lộ trình phát triển qua các phase từ Phase 0 đến Phase 6 |
-| `docs/PROJECT_STATUS.md` | Trạng thái hiện tại của dự án: phase hiện tại, task đang làm, blocker, bước tiếp theo |
-| `docs/TASKS.md` | Danh sách task chi tiết có mã định danh (Task ID), dependencies và acceptance criteria |
-| `docs/DECISIONS.md` | Nhật ký ghi nhận các quyết định kiến trúc quan trọng (ADR) |
-| `docs/KNOWN_ISSUES.md` | Danh sách các lỗi tồn đọng, giới hạn kỹ thuật và phương án xử lý |
+| Tài liệu                 | Mục đích & Nội dung                                                                    |
+| :----------------------- | :------------------------------------------------------------------------------------- |
+| `docs/PRD.md`            | Bản mô tả yêu cầu sản phẩm, hành trình người dùng, các dạng câu hỏi và nội dung học    |
+| `docs/ARCHITECTURE.md`   | Kiến trúc hệ thống, phân lớp backend, luồng frontend swipe feed, thuật toán nội dung   |
+| `docs/DATABASE.md`       | Thiết kế cơ sở dữ liệu MySQL, ERD, Schema, Index, quan hệ N5-N1                        |
+| `docs/API.md`            | Đặc tả REST API contracts, định dạng request/response, mã lỗi, authentication          |
+| `docs/SECURITY.md`       | Chiến lược bảo mật, hash mật khẩu, JWT, RBAC (User/Admin), phòng chống SQLi/XSS        |
+| `docs/TESTING.md`        | Chiến lược kiểm thử tự động, tiêu chí nghiệm thu, coverage target                      |
+| `docs/ROADMAP.md`        | Lộ trình phát triển qua các phase từ Phase 0 đến Phase 6                               |
+| `docs/PROJECT_STATUS.md` | Trạng thái hiện tại của dự án: phase hiện tại, task đang làm, blocker, bước tiếp theo  |
+| `docs/TASKS.md`          | Danh sách task chi tiết có mã định danh (Task ID), dependencies và acceptance criteria |
+| `docs/DECISIONS.md`      | Nhật ký ghi nhận các quyết định kiến trúc quan trọng (ADR)                             |
+| `docs/KNOWN_ISSUES.md`   | Danh sách các lỗi tồn đọng, giới hạn kỹ thuật và phương án xử lý                       |
 
 ---
 

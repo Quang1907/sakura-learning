@@ -385,3 +385,75 @@
 #### `DELETE /api/v1/admin/kanji/:id` (Admin Only)
 
 - **Mục đích**: Xóa mềm (`deleted_at = NOW()`) Kanji khỏi hệ thống.
+
+---
+
+### 3.6. Vocabulary Management (`/api/v1/vocabulary` & `/api/v1/admin/vocabulary`)
+
+#### `GET /api/v1/vocabulary`
+- **Query Params**: `jlpt=N5&page=1&limit=20&search=nihon&partOfSpeech=noun`
+- **Response 200 OK**: Trả về danh sách từ vựng kèm phân trang `meta: { total, page, limit, totalPages }`.
+
+#### `GET /api/v1/vocabulary/:id`
+- **Response 200 OK**: Chi tiết từ vựng, cấp độ JLPT, danh sách Kanji liên kết và các câu ví dụ mẫu.
+
+#### `POST /api/v1/admin/vocabulary` (Admin/Moderator Only)
+- **Request Body**:
+```json
+{
+  "word": "友達",
+  "reading": "ともだち",
+  "romaji": "tomodachi",
+  "partOfSpeech": "noun",
+  "meaningVi": "Bạn bè",
+  "jlptLevels": ["N5"],
+  "examples": [
+    {
+      "sentenceJp": "彼は私の友達です。",
+      "sentenceVi": "Anh ấy là bạn của tôi."
+    }
+  ]
+}
+```
+
+#### `PUT /api/v1/admin/vocabulary/:id` (Admin/Moderator Only)
+- **Mục đích**: Cập nhật thông tin từ vựng, nghĩa, cấp độ hoặc câu ví dụ.
+
+#### `DELETE /api/v1/admin/vocabulary/:id` (Admin Only)
+- **Mục đích**: Xóa mềm (`deleted_at = NOW()`) từ vựng khỏi hệ thống.
+
+---
+
+### 3.7. Grammar Management (`/api/v1/grammar` & `/api/v1/admin/grammar`)
+
+#### `GET /api/v1/grammar`
+- **Query Params**: `jlpt=N5&page=1&limit=20&search=です`
+- **Response 200 OK**: Trả về danh sách mẫu ngữ pháp kèm phân trang.
+
+#### `GET /api/v1/grammar/:id`
+- **Response 200 OK**: Chi tiết mẫu ngữ pháp, cấu trúc, ý nghĩa, hướng dẫn sử dụng và câu ví dụ.
+
+#### `POST /api/v1/admin/grammar` (Admin/Moderator Only)
+- **Request Body**:
+```json
+{
+  "title": "〜は〜です",
+  "structure": "N1 は N2 です",
+  "meaningVi": "N1 là N2",
+  "usageNotes": "Mẫu câu khẳng định cơ bản trong tiếng Nhật",
+  "jlptLevels": ["N5"],
+  "sentences": [
+    {
+      "sentenceJp": "私は日本人です。",
+      "sentenceVi": "Tôi là người Nhật Bản."
+    }
+  ]
+}
+```
+
+#### `PUT /api/v1/admin/grammar/:id` (Admin/Moderator Only)
+- **Mục đích**: Cập nhật thông tin mẫu ngữ pháp.
+
+#### `DELETE /api/v1/admin/grammar/:id` (Admin Only)
+- **Mục đích**: Xóa mềm (`deleted_at = NOW()`) mẫu ngữ pháp khỏi hệ thống.
+

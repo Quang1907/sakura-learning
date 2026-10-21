@@ -19,6 +19,7 @@ Hệ thống được tổ chức theo mô hình Monorepo (sử dụng NPM Works
 ```
 
 ### Trách nhiệm của các package:
+
 - `apps/web`: Ứng dụng di động trên nền web dành cho học viên, tối ưu giao diện vuốt 60fps, hỗ trợ PWA offline.
 - `apps/admin`: Cổng quản trị dành cho giáo viên và người kiểm duyệt nội dung (Kanji, Từ vựng, Ngữ pháp, Câu hỏi).
 - `apps/api`: REST API backend chịu trách nhiệm xử lý toàn bộ logic nghiệp vụ, thuật toán feed và lưu trữ dữ liệu.
@@ -53,6 +54,7 @@ Mọi yêu cầu HTTP gửi đến `apps/api` đều phải đi qua luồng tu�
 ```
 
 ### Chi tiết trách nhiệm từng tầng:
+
 1. **Router**: Chỉ khai báo định tuyến đường dẫn HTTP (`/api/v1/feed`), phương thức (`GET/POST`), và gắn các middleware (như `authenticate`, `requireRole('ADMIN')`, `validateBody(createKanjiSchema)`). Tuyệt đối không chứa logic nghiệp vụ.
 2. **Validation & Middleware**: Đảm bảo request body/query hợp lệ trước khi vào Controller. Nếu sai format, reject ngay lập tức với mã lỗi `400 Bad Request`.
 3. **Controller**: Nhận request đã được validate, chuyển đổi thành DTO sạch, gọi phương thức Service tương ứng và định dạng kết quả trả về `res.status(200).json(...)`. **Quy tắc bất biến: Controller không gọi Repository trực tiếp và không truy cập database.**
@@ -78,7 +80,7 @@ sequenceDiagram
     DB-->>S: Trả về password_hash, role
     S->>S: Đối chiếu bcrypt.compare()
     S-->>C: Trả về accessToken (15m) + refreshToken (7d)
-    
+
     Note over C,M: Với mỗi request tiếp theo:
     C->>M: GET /api/v1/admin/kanji (Authorization: Bearer <accessToken>)
     M->>M: Verify chữ ký JWT & trích xuất payload {userId, role}
@@ -95,6 +97,7 @@ sequenceDiagram
 ## 4. Kiến Trúc Frontend: Cơ Chế Thẻ Vuốt (Swipe Feed Architecture)
 
 ### 4.1. Bộ đệm thẻ học (Sliding Window Buffer)
+
 Để đảm bảo trải nghiệm 60fps mượt mà trên các thiết bị di động cấu hình yếu, Frontend **không render toàn bộ danh sách thẻ** vào DOM, mà sử dụng cơ chế cửa sổ trượt (Sliding Window):
 
 - **Buffer Size**: Duy trì tối đa 3-5 thẻ trong DOM cùng một lúc:
@@ -109,6 +112,7 @@ graph LR
 ```
 
 ### 4.2. Xử lý Cử Chỉ & Không Xung Đột (Gesture Handling)
+
 - Sử dụng cảm biến cử chỉ Touch (Touchstart, Touchmove, Touchend) với cơ chế xác định hướng di chuyển chính (Direction Lock):
   - Nếu góc di chuyển nằm trong khoảng trục dọc (Y-axis > X-axis), khóa cuộn ngang để tránh kích hoạt nhầm tính năng "Đã biết / Cần học lại".
   - Nếu góc di chuyển nằm trong khoảng trục ngang (X-axis > Y-axis), khóa trượt dọc để người dùng thực hiện thao tác đánh giá thẻ.
@@ -121,12 +125,15 @@ graph LR
 Thuật toán phân phối thẻ học được tách biệt thành một Service độc lập (`FeedEngineService`), cho phép dễ dàng cấu hình hoặc thay đổi thuật toán mà không ảnh hưởng đến các tầng khác.
 
 ### 5.1. Tỷ lệ phân bổ nội dung (Content Distribution Ratio)
+
 Trong một phiên học thông thường, luồng thẻ được sinh ra dựa trên tỷ lệ cấu hình:
+
 - **60% Kiến thức mới (New Items)**: Thuộc cấp độ JLPT mà người dùng đang hướng tới, chưa từng học.
 - **30% Ôn tập ngắt quãng (SRS Review Items)**: Các kiến thức đã đến hạn ôn tập (Due Review) dựa trên thuật toán SM-2 rút gọn.
 - **10% Củng cố điểm yếu (Weak Points / Questions)**: Các câu hỏi trắc nghiệm hoặc bài tập liên quan đến những thẻ mà người dùng từng bấm "Cần học lại" trong các phiên gần nhất.
 
 ### 5.2. Công thức thuật toán Lặp lại ngắt quãng (Spaced Repetition SM-2)
+
 - Khi người dùng đánh giá "Đã nhớ" hoặc làm đúng câu hỏi:
   - `srs_stage = srs_stage + 1`
   - Khoảng cách ôn tập tiếp theo:

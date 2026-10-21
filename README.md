@@ -50,6 +50,7 @@ sakura-learning/
 ## 🚀 4. Hướng Dẫn Vận Hành Monorepo (NPM Workspaces)
 
 ### 4.1. Cài đặt và liên kết Workspaces
+
 ```bash
 # Cài đặt và tự động liên kết (symlink) các package trong monorepo
 npm install
@@ -59,6 +60,7 @@ npm query ":root > *"
 ```
 
 ### 4.2. Chạy Lệnh Trên Toàn Bộ Workspaces
+
 ```bash
 # Chạy kiểm thử tự động trên toàn bộ workspaces
 npm test

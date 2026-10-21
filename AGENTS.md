@@ -17,6 +17,7 @@ Tài liệu này định nghĩa các nguyên tắc làm việc, tiêu chuẩn l�
 ## 2. Tiêu Chuẩn Kỹ Thuật (Tech Stack & Conventions)
 
 ### 2.1. Cấu Trúc Monorepo (NPM Workspaces)
+
 ```
 /
 ├── apps/
@@ -30,6 +31,7 @@ Tài liệu này định nghĩa các nguyên tắc làm việc, tiêu chuẩn l�
 ```
 
 ### 2.2. Quy Tắc Backend Phân Lớp (Layered Architecture)
+
 Tất cả các module backend trong `apps/api` phải tuân theo luồng xử lý nghiêm ngặt:
 `Router -> Middleware -> Controller -> Service -> Repository -> Database`
 
@@ -41,6 +43,7 @@ Tất cả các module backend trong `apps/api` phải tuân theo luồng xử l
 - **DTO & Validation**: Mọi dữ liệu đầu vào (Request body, params, query) phải được validate thông qua schema (Zod) trước khi vào Controller/Service.
 
 ### 2.3. Quy Tắc Frontend (Mobile-first & Swipe Experience)
+
 - **Thiết kế Mobile-first**: Tối ưu tuyệt đối cho màn hình cảm ứng dọc (iPhone/Android), responsive linh hoạt trên Tablet và Desktop.
 - **Chủ đề Visual**: Phong cách Sakura / Anime thẩm mỹ cao, tone màu hồng hoa anh đào, trắng sứ, xám dịu và chế độ Dark Mode tinh tế.
 - **Trải nghiệm Vuốt (Gestures)**:

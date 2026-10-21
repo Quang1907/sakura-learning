@@ -17,11 +17,13 @@ graph TD
 ## Chi Tiết Các Giai Đoạn (Phases)
 
 ### 🌸 Phase 0 — Product Design & System Blueprint (Đang thực hiện)
+
 - **Mục tiêu**: Hoàn thiện toàn bộ đặc tả sản phẩm (PRD), kiến trúc phân lớp (Architecture), schema cơ sở dữ liệu MySQL chuẩn hóa (Database), API contracts, bảo mật, kiểm thử và thiết lập bộ nhớ AI.
 - **Dependencies**: Không.
 - **Tiêu chí hoàn thành**: Toàn bộ 14 tài liệu dự án được tạo, đối soát không mâu thuẫn kỹ thuật.
 
 ### 🌸 Phase 1 — Project Foundation & Monorepo Setup
+
 - **Mục tiêu**: Khởi tạo cấu trúc monorepo hoàn chỉnh với NPM Workspaces, cài đặt TypeScript strict mode, ESLint, Prettier, cấu hình database MySQL connection pool, test runner (Vitest) và nền móng Auth cơ bản (JWT Helper, Auth Middleware, seed tài khoản test).
 - **Dependencies**: Hoàn thành Phase 0.
 - **Deliverables**:
@@ -31,6 +33,7 @@ graph TD
   - Nền móng Auth tối giản (JWT verification middleware và seed tài khoản mặc định `admin@sakura.app`, `user@sakura.app`) phục vụ ngay cho Phase 2 & Phase 3.
 
 ### 🌸 Phase 2 — Core Learning Engine & Data Models
+
 - **Mục tiêu**: Thiết kế và triển khai Shared Types, DTOs, Zod Validation Schemas, thuật toán phân phối nội dung Feed và thuật toán Spaced Repetition (SRS SM-2 cải tiến).
 - **Dependencies**: Hoàn thành Phase 1.
 - **Deliverables**:
@@ -38,6 +41,7 @@ graph TD
   - Bộ schema validation cho tất cả các dạng thẻ và câu hỏi.
 
 ### 🌸 Phase 3 — First End-to-End Module (Kanji Full-Stack)
+
 - **Mục tiêu**: Xây dựng luồng hoàn chỉnh đầu tiên từ Database -> Repository -> Service -> Controller -> Router -> Web Frontend -> Admin.
 - **Dependencies**: Hoàn thành Phase 2.
 - **Deliverables**:
@@ -47,6 +51,7 @@ graph TD
   - Integration test và Component test pass 100%.
 
 ### 🌸 Phase 4 — Learning Experience Expansion
+
 - **Mục tiêu**: Mở rộng hệ thống nội dung sang Từ vựng (Vocabulary), Ngữ pháp (Grammar), Mẫu câu (Sentences) và Ngân hàng câu hỏi trắc nghiệm/tự luận tương tác.
 - **Dependencies**: Hoàn thành Phase 3.
 - **Deliverables**:
@@ -55,6 +60,7 @@ graph TD
   - Trang thống kê tiến trình học tập (Streak, số thẻ đã thuộc, EXP).
 
 ### 🌸 Phase 5 — Full User Management & Content Governance
+
 - **Mục tiêu**: Hoàn thiện cổng quản lý người dùng nâng cao (Đăng ký tài khoản công khai, Quên mật khẩu / Reset password qua email, Profile mở rộng), phân quyền RBAC đa cấp độ, kiểm duyệt nội dung cộng đồng và công cụ import dữ liệu JLPT N5-N1 hàng loạt.
 - **Dependencies**: Hoàn thành Phase 4.
 - **Deliverables**:
@@ -64,6 +70,7 @@ graph TD
   - Bộ công cụ Import/Export dữ liệu từ CSV/JSON cho giáo viên/admin.
 
 ### 🌸 Phase 6 — Offline PWA & Production Release
+
 - **Mục tiêu**: Nâng cấp ứng dụng thành Progressive Web App (PWA), tích hợp Service Worker, bộ nhớ đệm IndexedDB cho phép học offline và đồng bộ dữ liệu khi có mạng trở lại.
 - **Dependencies**: Hoàn thành Phase 5.
 - **Deliverables**:

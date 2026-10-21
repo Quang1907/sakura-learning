@@ -1,9 +1,13 @@
 /**
  * @sakura/web
- * Client Web App Entrypoint placeholder
+ * Client Web App Entrypoint
  */
 
-import { SAKURA_SHARED_VERSION } from '@sakura/shared';
-
 export const WEB_VERSION = '0.1.0';
-export const SHARED_REF = SAKURA_SHARED_VERSION;
+
+export * from './api/client.js';
+export * from './components/KanjiCard.js';
+export * from './components/KanjiDetailModal.js';
+export * from './components/KanjiSwipeFeed.js';
+export * from './components/KanjiExplorer.js';
+export * from './App.js';
