@@ -14,3 +14,5 @@ export * from './schemas/feed.schema.js';
 export * from './schemas/vocabulary.schema.js';
 export * from './schemas/grammar.schema.js';
 export * from './schemas/offline-package.schema.js';
+export * from './schemas/auth.schema.js';
+

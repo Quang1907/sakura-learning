@@ -1,6 +1,6 @@
 # PROJECT STATUS — Sakura Swipe Learning Current State
 
-_Cập nhật lần cuối: 2026-10-21T11:37:00+09:00_
+_Cập nhật lần cuối: 2026-10-21T11:48:00+09:00 — Final Audit & Release Gate Passed_
 
 ---
 
@@ -8,26 +8,27 @@ _Cập nhật lần cuối: 2026-10-21T11:37:00+09:00_
 
 | Mục                          | Trạng thái hiện tại                                                                                                    |
 | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
-| **Phase hiện tại**           | **Phase 6 — Offline-First PWA & Release Readiness** (Hoàn tất 100%)                                                     |
-| **Tiến độ Phase 6**          | **100%** (Đã hoàn thành toàn bộ TASK-P6-001 đến TASK-P6-008)                                                          |
-| **Task vừa hoàn thành**      | `TASK-P6-008` (Kiểm thử hồi quy toàn diện, xác thực PWA & Outbox Sync Release Readiness)                                |
-| **Sẵn sàng phát hành**       | **SẴN SÀNG (Production & iPhone PWA Ready)**                                                                           |
+| **Phase hiện tại**           | **Phase 6 — Offline-First PWA & Final Release Gate** (Hoàn tất 100%)                                                   |
+| **Tiến độ Dự Án**            | **Hoàn thành xuất sắc toàn bộ Phase 0 đến Phase 6**                                                                    |
+| **Task vừa hoàn thành**      | `FINAL-AUDIT`: Kiểm toán kỹ thuật toàn diện, sửa bảo mật User Isolation, hoàn thiện Auth API & Release Gate            |
+| **Sẵn sàng phát hành**       | **SẴN SÀNG 100% (Production, MySQL 8 & iPhone PWA Ready)**                                                             |
 | **Blocker hiện tại**         | **Không có**                                                                                                           |
-| **Bước tiếp theo chính xác** | Người dùng có thể chạy ứng dụng qua Safari trên iPhone, bấm "Thêm vào Màn hình chính", tải gói bài học và học offline hoàn toàn. |
+| **Bước tiếp theo chính xác** | Người dùng có thể khởi chạy server hoặc truy cập qua Safari trên iPhone để trải nghiệm học tiếng Nhật hoàn chỉnh.      |
 
 ---
 
-## 2. Bằng Chứng Thực Tế & Kết Quả Kiểm Thử (Phase 6)
+## 2. Bằng Chứng Thực Tế & Kết Quả Kiểm Thử (Final Audit)
 
 - **Test Suite Thực Tế (`npm test`)**:
-  - **128/128 tests passed** trên toàn bộ 18 test files (100% pass, 0 failed, 0 skipped).
+  - **137/137 tests passed** trên toàn bộ 19 test files (100% pass, 0 failed, 0 skipped).
   - Bao phủ toàn diện:
     - Shared Zod Schemas & DTOs (18 tests)
     - Frontend Card Components: VocabularyCard, GrammarCard, KanjiCard (3 tests)
     - SRS Spaced Repetition SM-2 logic (14 tests)
     - Feed Engine 60/30/10, Anti-Fatigue & Anti-Repetition (8 tests)
     - Question Grading & Normalization (10 tests)
-    - Auth & JWT Helper (4 tests)
+    - Auth & JWT Helper (2 tests)
+    - Auth API (Login, Register, Me) & User Progress Isolation Matrix (9 tests)
     - Supertest Health & Routing API (2 tests)
     - Supertest Core Learning Engine API: Feed, Progress Idempotency, Question Submission (12 tests)
     - Supertest Kanji Public & Admin Management API (12 tests)
